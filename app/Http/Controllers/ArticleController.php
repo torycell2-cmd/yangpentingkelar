@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    public function search(Request $request)
+    {
+        $keyword = $request->input('query');
+        
+        $articles = Article::where('title', 'LIKE', "%{$keyword}%")->get();
+        
+        return view('articles.search_result', compact('articles', 'keyword'));
+    }
+
     public function index()
     {
         $articles = Article::latest()->get();

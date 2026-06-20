@@ -17,8 +17,10 @@ Route::resource(
     'articles',
     ArticleController::class
 );
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::post('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
 
-Route::resource(
+Route::resource( 
     'forum',
     ForumController::class
 );
