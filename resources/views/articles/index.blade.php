@@ -1,112 +1,76 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title', 'Portal Artikel')
 
 @section('content')
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <div>
-        <h1>📚 Daftar Artikel</h1>
-
-        <span class="badge bg-primary">
-            Total Artikel: {{ $articles->count() }}
-        </span>
+<div class="container-fluid pt-4">
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form action="{{ route('articles.index') }}" method="GET">
+                <div class="input-group input-group-lg">
+                    <input type="text" name="query" class="form-control" placeholder="Cari artikel edukasi di sini..." value="{{ $keyword ?? '' }}">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Cari</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <a href="{{ route('articles.create') }}"
-       class="btn btn-primary">
-        + Tambah Artikel
-    </a>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-</div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h3 class="card-title font-weight-bold">Artikel Terbaru</h3>
+                    @if(auth()->user()->role === 'guru' || auth()->user()->role === 'admin')
+                        <a href="{{ route('articles.create') }}" class="btn btn-sm btn-success ml-auto"><i class="fas fa-plus"></i> Tulis Artikel Baru</a>
+                    @endif
+                </div>
+                <div class="card-body">
+                    @forelse($articles as $article)
+                        <div class="border-bottom mb-4 pb-3">
+                            <h4 class="text-primary font-weight-bold">{{ $article->title }}</h4>
+                            <p class="text-muted small">Penulis: {{ $article->author }} | Kategori: {{ $article->category }} | {{ $article->created_at->diffForHumans() }}</p>
+                            <p>{{ Str::limit($article->content, 180) }}</p>
+                            <a href="{{ route('articles.show', $article->id) }}" class="btn btn-sm btn-outline-primary">Baca Selengkapnya</a>
+                        </div>
+                    @empty
+                        <p class="text-center text-muted py-4">Tidak ada artikel yang ditemukan.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
 
-<div class="card shadow-sm">
-
-    <div class="card-body">
-
-        <table class="table table-striped table-hover">
-
-            <thead class="table-dark">
-
-                <tr>
-                    <th>ID</th>
-                    <th>Judul</th>
-                    <th>Author</th>
-                    <th>Kategori</th>
-                    <th width="180">Aksi</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            @forelse($articles as $article)
-
-                <tr>
-
-                    <td>{{ $article->id }}</td>
-
-                    <td>
-                        <strong>{{ $article->title }}</strong>
-                    </td>
-
-                    <td>{{ $article->author }}</td>
-
-                    <td>
-                        <span class="badge bg-success">
-                            {{ $article->category }}
-                        </span>
-                    </td>
-
-                    <td>
-
-                        <a href="{{ route('articles.show',$article->id) }}"
-                        class="btn btn-info btn-sm">
-                        Detail
-                        </a>
-
-                        <a href="{{ route('articles.edit',$article->id) }}"
-                        class="btn btn-warning btn-sm">
-                        Edit
-                        </a>
-
-                        <form action="{{ route('articles.destroy',$article->id) }}"
-                            method="POST"
-                            class="d-inline">
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Yakin hapus artikel?')">
-                                Hapus
-                            </button>
-
-                        </form>
-
-                    </td>
-
-                </tr>
-
-            @empty
-
-                <tr>
-
-                    <td colspan="5" class="text-center text-muted">
-
-                        Belum ada artikel 😢
-
-                    </td>
-
-                </tr>
-
-            @endforelse
-
-            </tbody>
-
-        </table>
-
+        <div class="col-md-4">
+            <div class="card card-outline card-danger">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-fire mr-1 text-danger"></i> Artikel Trending</h3>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                        @forelse($trendingArticles as $trend)
+                            <li class="item py-2 border-bottom">
+                                <div class="product-info ml-2">
+                                    <a href="{{ route('articles.show', $trend->id) }}" class="product-title font-weight-bold text-dark">{{ $trend->title }}</a>
+                                    <span class="badge badge-warning float-right">{{ $trend->views ?? 0 }} Views</span>
+                                    <span class="product-description small text-muted">Oleh: {{ $trend->author }}</span>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="item p-3 text-center text-muted">Belum ada materi populer.</li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
-
 @endsection
