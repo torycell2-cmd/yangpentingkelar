@@ -1,40 +1,43 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
 
 @section('content')
-<div class="container-fluid py-4" style="font-family: 'Nunito', 'Segoe UI', sans-serif;">
+<div class="container-fluid pt-4">
+    <!-- Navbar Modern agar seragam dengan Dashboard -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 shadow-sm rounded-lg py-2">
+        <div class="navbar-brand font-weight-bold text-primary ml-2">Konsultasi AI Tutor</div>
+        <div class="ml-auto">
+             <span class="text-muted mr-3" style="font-size: 0.85rem;">Siap membantu materi kuliah Anda</span>
+        </div>
+    </nav>
+
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
-            
-            <h5 class="text-primary font-weight-bold mb-3 pb-2 border-bottom" style="font-size: 1.1rem; border-color: #e3e6f0 !important;">
-                Konsultasi AI Tutor
-            </h5>
-
-            <div class="card shadow-sm border-0 rounded-lg" style="background: #ffffff; height: calc(100vh - 180px); min-height: 500px; display: flex; flex-direction: column;">
+            <!-- Chat Card yang sudah disesuaikan stylenya -->
+            <div class="card shadow-sm border-0 rounded-lg overflow-hidden" style="height: calc(100vh - 200px); min-height: 500px; display: flex; flex-direction: column;">
                 
-                <div id="chat-box" class="card-body p-4 overflow-auto" style="flex-grow: 1;">
-                    
+                <div id="chat-box" class="card-body p-4 overflow-auto bg-white" style="flex-grow: 1;">
                     <div class="d-flex mb-4">
-                        <div class="p-3 shadow-none" style="background-color: #f4f6f9; border-radius: 12px; max-width: 80%; font-size: 0.9rem; color: #333; line-height: 1.5; width: fit-content;">
+                        <div class="p-3 shadow-sm" style="background-color: #f8f9fc; border-radius: 15px; max-width: 80%; font-size: 0.95rem; color: #333; line-height: 1.6; border: 1px solid #edf2f7;">
                             Halo! Saya AI Tutor CMS Anda. Tanyakan apa saja seputar materi artikel, pengelolaan forum, atau pembuatan kuis!
                         </div>
                     </div>
-
                 </div>
 
                 <div class="card-footer bg-white border-top-0 p-3">
                     <form id="chat-form" onsubmit="sendMessage(event)">
                         <div class="d-flex align-items-center">
-                            <input type="text" id="user-input" autocomplete="off" placeholder="Tulis pertanyaan Anda di sini..." class="form-control bg-light border-light pl-3" style="font-size: 0.88rem; height: 42px; border-radius: 6px;">
+                            <input type="text" id="user-input" autocomplete="off" placeholder="Tulis pertanyaan Anda di sini..." 
+                                   class="form-control bg-light border-0 px-4" 
+                                   style="height: 48px; border-radius: 50px; font-size: 0.9rem;">
                             
-                            <button type="submit" class="btn btn-primary px-4 font-weight-bold ml-2" style="font-size: 0.85rem; background-color: #4e73df; border-color: #4e73df; border-radius: 6px; height: 42px; white-space: nowrap;">
+                            <button type="submit" class="btn btn-primary px-4 font-weight-bold ml-2 shadow-sm" 
+                                    style="border-radius: 50px; height: 48px; width: 120px;">
                                 Kirim
                             </button>
                         </div>
                     </form>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
