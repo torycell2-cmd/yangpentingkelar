@@ -308,6 +308,7 @@ return [
         ['text' => 'Dashboard', 'url' => 'dashboard', 'icon' => 'fas fa-fw fa-tachometer-alt'],
         ['text' => 'Artikel', 'url' => 'articles', 'icon' => 'fas fa-fw fa-book'],
         ['text' => 'Forum', 'url' => 'forum', 'icon' => 'fas fa-fw fa-comments'],
+        ['text' => 'Quiz', 'url' => 'quiz', 'icon' => 'fas fa-fw fa-tasks'],
         ['header' => 'LAINNYA'],
         ['text' => 'AI Tutor', 'url' => 'ai-tutor', 'icon' => 'fas fa-fw fa-robot'],
     ],
