@@ -71,11 +71,13 @@ class ForumController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
+        /*
          $forum->update([
             'title' => $request->title,
             'author' => $request->author,
             'content' => $request->content,
         ]);
+        */
 
         return view('forum.edit-comment', compact('comment'));
     }

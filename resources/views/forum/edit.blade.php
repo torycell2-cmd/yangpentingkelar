@@ -2,51 +2,95 @@
 
 @section('content')
 
-<div class="card">
+<div class="container py-4">
 
-    <div class="card-header">
-        Edit Topik
+    {{-- Tombol Kembali --}}
+    <div class="mb-3">
+        <a href="{{ route('forum.index') }}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-1" aria-hidden="true"></i>
+            Kembali ke Forum
+        </a>
     </div>
 
-    <div class="card-body">
+    <div class="card shadow border-0">
 
-        <form action="{{ route('forum.update',$forum->id) }}"
-              method="POST">
+        <div class="card-header bg-warning text-dark">
 
-            @csrf
-            @method('PUT')
+            <h4 class="mb-0">
+                <i class="fa fa-pencil-square-o me-2" aria-hidden="true"></i>
+                Edit Topik Diskusi
+            </h4>
 
-            <div class="mb-3">
-                <label>Judul</label>
+        </div>
 
-                <input type="text"
-                       name="title"
-                       class="form-control"
-                       value="{{ $forum->title }}">
-            </div>
+        <div class="card-body">
 
-            <div class="mb-3">
-                <label>Author</label>
+            <form action="{{ route('forum.update',$forum->id) }}"
+                  method="POST">
 
-                <input type="text"
-                       name="author"
-                       class="form-control"
-                       value="{{ $forum->author }}">
-            </div>
+                @csrf
+                @method('PUT')
 
-            <div class="mb-3">
-                <label>Isi Diskusi</label>
+                <div class="mb-3">
 
-                <textarea name="content"
-                          rows="6"
-                          class="form-control">{{ $forum->content }}</textarea>
-            </div>
+                    <label class="form-label fw-semibold">
+                        Judul Topik
+                    </label>
 
-            <button class="btn btn-primary">
-                Simpan
-            </button>
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        value="{{ $forum->title }}">
 
-        </form>
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        <i class="fa fa-user-o me-1" aria-hidden="true"></i>
+                        Nama Author
+                    </label>
+
+                    <input
+                        type="text"
+                        name="author"
+                        class="form-control"
+                        value="{{ $forum->author }}">
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        <i class="fa fa-commenting me-1" aria-hidden="true"></i>
+                        Isi Diskusi
+                    </label>
+
+                    <textarea
+                        name="content"
+                        rows="6"
+                        class="form-control">{{ $forum->content }}</textarea>
+
+                </div>
+
+                <div class="d-flex justify-content-end">
+
+                    <a href="{{ route('forum.index') }}"
+                       class="btn btn-outline-secondary me-2">
+                        Batal
+                    </a>
+
+                    <button class="btn btn-warning">
+                        <i class="fa fa-save me-1" aria-hidden="true"></i>
+                        Simpan Perubahan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 
