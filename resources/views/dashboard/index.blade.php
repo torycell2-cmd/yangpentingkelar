@@ -92,7 +92,7 @@
                     <p class="text-muted mb-0">Bagikan ilmu kamu ke komunitas sekarang.</p>
                 </div>
             </div>
-            <a href="#" class="btn btn-dark btn-lg rounded-pill px-4">
+            <a href="{{ route('articles.create') }}" class="btn btn-dark btn-lg rounded-pill px-4">
                 <i class="fas fa-plus mr-2"></i> Buat Sekarang
             </a>
         </div>

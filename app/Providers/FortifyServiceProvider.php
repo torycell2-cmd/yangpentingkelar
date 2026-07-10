@@ -71,5 +71,13 @@ class FortifyServiceProvider extends ServiceProvider
                 ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
             );
         });
+
+        Fortify::requestPasswordResetLinkView(function(){
+            return view('auth.forgot-password');
+        });
+
+        Fortify::resetPasswordView(function($request){
+            return view('auth.reset-password', ['request' => $request]);
+        });
     }
 }
