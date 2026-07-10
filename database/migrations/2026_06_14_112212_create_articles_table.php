@@ -17,6 +17,8 @@ return new class extends Migration
         $table->string('author');
         $table->string('category');
         $table->longText('content');
+        $table->enum('status', ['pending', 'approved'])->default('pending');
+        $table->integer('views')->default(0);
         $table->timestamps();
     });
 }
