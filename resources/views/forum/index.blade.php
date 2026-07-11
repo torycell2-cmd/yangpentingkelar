@@ -1,62 +1,81 @@
 @extends('adminlte::page')
 
-@section('title','Forum Diskusi')
+@section('title', 'Forum Diskusi')
 
 @section('content')
 
 <style>
 
+body{
+    background:#f4f7fb;
+}
+
 .hero{
-background:linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
-border-radius:20px;
-padding:35px;
-color:white;
-margin-bottom:25px;
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    border-radius:20px;
+    padding:35px;
+    margin-bottom:25px;
 }
 
 .hero h2{
-font-weight:bold;
+    font-weight:bold;
 }
 
-.forum-card{
-border:none;
-border-radius:20px;
-transition:.3s;
-overflow:hidden;
-}
-
-.forum-card:hover{
-transform:translateY(-8px);
-box-shadow:0 20px 40px rgba(0,0,0,.15);
-}
-
-.avatar{
-width:55px;
-height:55px;
-border-radius:50%;
-background:#2563eb;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:22px;
-font-weight:bold;
-}
-
-.badge-category{
-background:#2563eb;
-color:white;
-padding:7px 14px;
-border-radius:30px;
-}
-
-.info{
-font-size:13px;
-color:#777;
+.search-box{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    margin-bottom:25px;
 }
 
 .search-box input{
-border-radius:30px;
+    border-radius:30px;
+}
+
+.forum-card{
+
+    border:none;
+    border-radius:20px;
+    transition:.3s;
+}
+
+.forum-card:hover{
+
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+
+}
+
+.avatar{
+
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:25px;
+    font-weight:bold;
+
+}
+
+.badge-category{
+
+    background:#2563eb;
+    color:white;
+    border-radius:30px;
+    padding:7px 15px;
+
+}
+
+.action-btn{
+
+    border-radius:30px;
+
 }
 
 </style>
@@ -71,21 +90,23 @@ border-radius:30px;
 
 <h2>💬 Forum Diskusi</h2>
 
-<p class="mb-0">
-Diskusikan materi bersama guru dan teman-temanmu.
+<p>
+
+Diskusikan materi bersama guru dan temanmu.
+
 </p>
 
 </div>
 
 <div class="col-md-4 text-right">
 
-<a href="#" class="btn btn-light rounded-pill px-4">
+<button class="btn btn-light rounded-pill px-4">
 
 <i class="fas fa-plus"></i>
 
 Buat Diskusi
 
-</a>
+</button>
 
 </div>
 
@@ -93,9 +114,7 @@ Buat Diskusi
 
 </div>
 
-<div class="card border-0 shadow mb-4">
-
-<div class="card-body">
+<div class="search-box">
 
 <form>
 
@@ -122,47 +141,45 @@ Cari
 
 </div>
 
-</div>
-
 @php
 
-$forum=[
+$forums=[
 
 [
 'nama'=>'Andi',
-'judul'=>'Bagaimana cara menggunakan Laravel Migration?',
-'isi'=>'Saya masih bingung cara migrate database di Laravel.',
+'judul'=>'Bagaimana cara membuat migration Laravel?',
+'isi'=>'Saya masih bingung menggunakan migration di Laravel. Mohon penjelasannya.',
 'kategori'=>'Laravel',
-'komentar'=>12,
-'like'=>24,
-'lihat'=>150
+'waktu'=>'5 menit lalu',
+'like'=>12,
+'komen'=>8
 ],
 
 [
 'nama'=>'Sinta',
 'judul'=>'Apa itu Normalisasi Database?',
-'isi'=>'Mohon penjelasan mengenai normalisasi hingga 3NF.',
-'kategori'=>'Basis Data',
-'komentar'=>18,
-'like'=>31,
-'lihat'=>210
+'isi'=>'Ada yang bisa menjelaskan Normalisasi sampai 3NF?',
+'kategori'=>'Database',
+'waktu'=>'30 menit lalu',
+'like'=>20,
+'komen'=>15
 ],
 
 [
 'nama'=>'Budi',
-'judul'=>'Cara membuat Login Laravel',
-'isi'=>'Bagaimana cara membuat login menggunakan Laravel Breeze?',
-'kategori'=>'Authentication',
-'komentar'=>9,
-'like'=>20,
-'lihat'=>120
+'judul'=>'Perbedaan Stack dan Queue',
+'isi'=>'Saya masih bingung perbedaan Stack dan Queue.',
+'kategori'=>'Struktur Data',
+'waktu'=>'1 jam lalu',
+'like'=>16,
+'komen'=>9
 ]
 
 ];
 
 @endphp
 
-@foreach($forum as $f)
+@foreach($forums as $forum)
 
 <div class="card forum-card shadow mb-4">
 
@@ -172,35 +189,41 @@ $forum=[
 
 <div class="avatar">
 
-{{ substr($f['nama'],0,1) }}
+{{ substr($forum['nama'],0,1) }}
 
 </div>
 
-<div class="ml-3 w-100">
+<div class="ml-3 flex-grow-1">
 
 <div class="d-flex justify-content-between">
 
 <div>
 
-<h5 class="font-weight-bold">
+<h4 class="font-weight-bold">
 
-{{ $f['judul'] }}
+{{ $forum['judul'] }}
 
-</h5>
+</h4>
 
-<div class="info">
+<small class="text-muted">
 
 <i class="fas fa-user"></i>
 
-{{ $f['nama'] }}
+{{ $forum['nama'] }}
 
-</div>
+•
+
+<i class="fas fa-clock"></i>
+
+{{ $forum['waktu'] }}
+
+</small>
 
 </div>
 
 <span class="badge-category">
 
-{{ $f['kategori'] }}
+{{ $forum['kategori'] }}
 
 </span>
 
@@ -208,31 +231,25 @@ $forum=[
 
 <p class="mt-3 text-muted">
 
-{{ $f['isi'] }}
+{{ $forum['isi'] }}
 
 </p>
 
 <hr>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center">
 
 <div>
 
-<span class="mr-3">
+<span class="mr-4">
 
-❤️ {{ $f['like'] }}
-
-</span>
-
-<span class="mr-3">
-
-💬 {{ $f['komentar'] }}
+❤️ {{ $forum['like'] }}
 
 </span>
 
 <span>
 
-👁 {{ $f['lihat'] }}
+💬 {{ $forum['komen'] }}
 
 </span>
 
@@ -240,11 +257,19 @@ $forum=[
 
 <div>
 
-<button class="btn btn-primary rounded-pill">
+<button class="btn btn-outline-primary action-btn">
+
+<i class="fas fa-thumbs-up"></i>
+
+Like
+
+</button>
+
+<button class="btn btn-primary action-btn">
 
 <i class="fas fa-comments"></i>
 
-Lihat Diskusi
+Balas
 
 </button>
 
