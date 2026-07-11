@@ -46,5 +46,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:siswa,admin'])->group(function () {
         Route::get('/siswa/tugas', [SiswaController::class, 'index']);
-    });
+    });   
 });
