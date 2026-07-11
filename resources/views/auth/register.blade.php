@@ -26,6 +26,7 @@
         </div>
         <div class="card-body pb-4">
             @php $role = request()->query('role', 'Siswa'); @endphp
+            @php $role = request()->query('role', 'guru'); @endphp
             <p class="login-box-msg text-muted">Daftar akun baru sebagai <b>{{ ucfirst($role) }}</b></p>
 
             <form action="{{ route('register') }}" method="POST">
