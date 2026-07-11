@@ -39,9 +39,9 @@
         <div class="card-body pb-4">
             <p class="login-box-msg text-muted">Silakan masuk untuk memulai sesi Anda</p>
 
-            @if(session('error'))
-                <div class="alert alert-danger text-sm pb-0 pt-2 text-center rounded shadow-sm">
-                    <p><i class="fas fa-exclamation-circle mr-1"></i> {{ session('error') }}</p>
+           @if(request()->query('message') == 'login_dulu')
+                <div class="alert alert-warning text-sm mb-3 text-center">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Anda harus login terlebih dahulu untuk membuat artikel.
                 </div>
             @endif
 

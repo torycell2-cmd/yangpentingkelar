@@ -26,12 +26,12 @@ Route::get('/ai-tutor', [AiTutorController::class, 'index'])->name('ai.index');
 Route::get('/register-choice', function () {
     return view('auth.register_choice');
 })->name('register.choice');
+Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
 
 Route::middleware(['auth'])->group(function () {
     
     Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
     Route::get('/articles/search', [ArticleController::class, 'index'])->name('articles.search');
-    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::resource('articles', ArticleController::class)->except(['index', 'create', 'store']);
 
