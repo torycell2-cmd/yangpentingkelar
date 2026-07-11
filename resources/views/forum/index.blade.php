@@ -1,159 +1,266 @@
 @extends('adminlte::page')
 
+@section('title','Forum Diskusi')
+
 @section('content')
 
-<div class="container">
+<style>
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">💬 Forum Diskusi</h2>
-            <p class="text-muted mb-0">
-                Tempat berdiskusi, bertanya, dan berbagi pengetahuan.
-            </p>
-        </div>
+.hero{
+background:linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
+border-radius:20px;
+padding:35px;
+color:white;
+margin-bottom:25px;
+}
 
-        <a href="{{ route('forum.create') }}" class="btn btn-primary px-4">
-            <i class="bi bi-plus-circle"></i> Buat Topik
-        </a>
-    </div>
+.hero h2{
+font-weight:bold;
+}
 
-    {{-- Statistik --}}
-    <div class="row g-3 mb-4">
+.forum-card{
+border:none;
+border-radius:20px;
+transition:.3s;
+overflow:hidden;
+}
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Topik</small>
-                        <h2 class="fw-bold text-primary mb-0">
-                            {{ $totalForum }}
-                        </h2>
-                    </div>
+.forum-card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
 
-                    <div class="fs-1">
-                        💬
-                    </div>
-                </div>
-            </div>
-        </div>
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+background:#2563eb;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:bold;
+}
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Komentar</small>
-                        <h2 class="fw-bold text-success mb-0">
-                            {{ $totalComment }}
-                        </h2>
-                    </div>
+.badge-category{
+background:#2563eb;
+color:white;
+padding:7px 14px;
+border-radius:30px;
+}
 
-                    <div class="fs-1">
-                        📝
-                    </div>
-                </div>
-            </div>
-        </div>
+.info{
+font-size:13px;
+color:#777;
+}
 
-    </div>
+.search-box input{
+border-radius:30px;
+}
 
-    {{-- Daftar Forum --}}
-    <div class="card border-0 shadow-sm">
+</style>
 
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-semibold">
-                Daftar Topik Diskusi
-            </h5>
-        </div>
+<div class="container-fluid py-4">
 
-        <div class="card-body p-0">
+<div class="hero">
 
-            @forelse($forums as $forum)
+<div class="row align-items-center">
 
-            <div class="border-bottom p-4">
+<div class="col-md-8">
 
-                <div class="d-flex justify-content-between">
+<h2>💬 Forum Diskusi</h2>
 
-                    <div>
+<p class="mb-0">
+Diskusikan materi bersama guru dan teman-temanmu.
+</p>
 
-                        <h5 class="fw-bold mb-1">
-                            {{ $forum->title }}
-                        </h5>
+</div>
 
-                        <small class="text-muted">
-                            👤 {{ $forum->author }}
-                        </small>
+<div class="col-md-4 text-right">
 
-                        <div class="mt-3">
+<a href="#" class="btn btn-light rounded-pill px-4">
 
-                            <a href="{{ route('forum.show',$forum->id) }}"
-                               class="btn btn-outline-primary btn-sm">
-                                Detail
-                            </a>
+<i class="fas fa-plus"></i>
 
-                            <a href="{{ route('forum.edit',$forum->id) }}"
-                               class="btn btn-outline-warning btn-sm">
-                                Edit
-                            </a>
+Buat Diskusi
 
-                            <form action="{{ route('forum.destroy',$forum->id) }}"
-                                  method="POST"
-                                  class="d-inline">
+</a>
 
-                                @csrf
-                                @method('DELETE')
+</div>
 
-                                <button class="btn btn-outline-danger btn-sm"
-                                    onclick="return confirm('Hapus topik ini?')">
-                                    Hapus
-                                </button>
+</div>
 
-                            </form>
+</div>
 
-                        </div>
+<div class="card border-0 shadow mb-4">
 
-                    </div>
+<div class="card-body">
 
-                    <div class="text-end text-muted">
+<form>
 
-                        <div class="badge bg-light text-dark mb-2">
-                            ID #{{ $forum->id }}
-                        </div>
+<div class="input-group">
 
-                    </div>
+<input
+type="text"
+class="form-control"
+placeholder="Cari topik diskusi...">
 
-                </div>
+<div class="input-group-append">
 
-            </div>
+<button class="btn btn-primary rounded-pill px-4">
 
-            @empty
+Cari
 
-            <div class="text-center py-5">
+</button>
 
-                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
-                     width="120"
-                     class="mb-3">
+</div>
 
-                <h5 class="fw-bold">
-                    Belum Ada Diskusi
-                </h5>
+</div>
 
-                <p class="text-muted">
-                    Jadilah orang pertama yang membuat topik diskusi.
-                </p>
+</form>
 
-                <a href="{{ route('forum.create') }}"
-                   class="btn btn-primary">
-                    + Buat Topik
-                </a>
+</div>
 
-            </div>
+</div>
 
-            @endforelse
+@php
 
-        </div>
+$forum=[
 
-    </div>
+[
+'nama'=>'Andi',
+'judul'=>'Bagaimana cara menggunakan Laravel Migration?',
+'isi'=>'Saya masih bingung cara migrate database di Laravel.',
+'kategori'=>'Laravel',
+'komentar'=>12,
+'like'=>24,
+'lihat'=>150
+],
+
+[
+'nama'=>'Sinta',
+'judul'=>'Apa itu Normalisasi Database?',
+'isi'=>'Mohon penjelasan mengenai normalisasi hingga 3NF.',
+'kategori'=>'Basis Data',
+'komentar'=>18,
+'like'=>31,
+'lihat'=>210
+],
+
+[
+'nama'=>'Budi',
+'judul'=>'Cara membuat Login Laravel',
+'isi'=>'Bagaimana cara membuat login menggunakan Laravel Breeze?',
+'kategori'=>'Authentication',
+'komentar'=>9,
+'like'=>20,
+'lihat'=>120
+]
+
+];
+
+@endphp
+
+@foreach($forum as $f)
+
+<div class="card forum-card shadow mb-4">
+
+<div class="card-body">
+
+<div class="d-flex">
+
+<div class="avatar">
+
+{{ substr($f['nama'],0,1) }}
+
+</div>
+
+<div class="ml-3 w-100">
+
+<div class="d-flex justify-content-between">
+
+<div>
+
+<h5 class="font-weight-bold">
+
+{{ $f['judul'] }}
+
+</h5>
+
+<div class="info">
+
+<i class="fas fa-user"></i>
+
+{{ $f['nama'] }}
+
+</div>
+
+</div>
+
+<span class="badge-category">
+
+{{ $f['kategori'] }}
+
+</span>
+
+</div>
+
+<p class="mt-3 text-muted">
+
+{{ $f['isi'] }}
+
+</p>
+
+<hr>
+
+<div class="d-flex justify-content-between">
+
+<div>
+
+<span class="mr-3">
+
+❤️ {{ $f['like'] }}
+
+</span>
+
+<span class="mr-3">
+
+💬 {{ $f['komentar'] }}
+
+</span>
+
+<span>
+
+👁 {{ $f['lihat'] }}
+
+</span>
+
+</div>
+
+<div>
+
+<button class="btn btn-primary rounded-pill">
+
+<i class="fas fa-comments"></i>
+
+Lihat Diskusi
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+@endforeach
 
 </div>
 
