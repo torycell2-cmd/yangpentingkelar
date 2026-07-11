@@ -1,86 +1,371 @@
 @extends('adminlte::page')
 
 @section('content')
-<div class="container-fluid pt-4">
-    <!-- Navbar Seragam -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 shadow-sm rounded-lg py-2">
-        <div class="navbar-brand font-weight-bold text-primary ml-2">Daftar Quiz</div>
-        <div class="ml-auto">
-            <button class="btn btn-primary rounded-pill px-4 shadow-sm">
-                <i class="fas fa-plus mr-2"></i> Buat Quiz
-            </button>
-        </div>
-    </nav>
 
-    <!-- Header Section -->
-    <div class="mb-4">
-        <h2 class="font-weight-bold text-dark">Eksplorasi Quiz</h2>
-        <p class="text-muted">Uji kemampuanmu dengan berbagai materi yang tersedia.</p>
+<div class="container-fluid">
+
+    {{-- Header --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">Eksplorasi Quiz</h2>
+            <p class="text-muted mb-0">
+                Kerjakan quiz untuk menguji kemampuanmu.
+            </p>
+        </div>
+
+        <span class="badge bg-primary fs-6 px-4 py-3 rounded-pill shadow">
+            12 Quiz Tersedia
+        </span>
+
     </div>
 
-    <!-- Search Section Modern -->
-    <div class="card border-0 shadow-sm rounded-lg mb-4">
-        <div class="card-body">
-            <form action="#" method="GET" class="d-flex">
-                <input type="text" name="search" class="form-control bg-light border-0 rounded-pill px-4" placeholder="Cari judul quiz...">
-                <button type="submit" class="btn btn-primary rounded-pill px-4 ml-2 shadow-sm">Cari</button>
-            </form>
-        </div>
-    </div>
+    {{-- Statistik --}}
+    <div class="row g-4 mb-4">
 
-    <!-- Quiz Grid -->
-    <div class="row">
-        @php
-            $quizzes = [
-                ['title' => 'Dasar Laravel', 'cat' => 'Pemrograman Web', 'color' => 'bg-primary', 'count' => '10 Soal'],
-                ['title' => 'MySQL Dasar', 'cat' => 'Basis Data', 'color' => 'bg-info', 'count' => '15 Soal'],
-                ['title' => 'Struktur Data', 'cat' => 'Algoritma', 'color' => 'bg-success', 'count' => '20 Soal']
-            ];
-        @endphp
+        <div class="col-md-4">
 
-        @foreach($quizzes as $q)
-        <div class="col-lg-4 mb-4">
-            <div class="card border-0 shadow-sm rounded-lg h-100">
-                <div class="card-body">
-                    <span class="badge {{ $q['color'] }} text-white px-3 py-2 rounded-pill mb-3">{{ $q['cat'] }}</span>
-                    <h5 class="font-weight-bold">{{ $q['title'] }}</h5>
-                    <p class="text-muted small mb-0">{{ $q['count'] }} Pilihan Ganda</p>
-                    <small class="text-secondary">Dibuat oleh: Instruktur</small>
-                    <button class="btn btn-outline-dark btn-block rounded-pill mt-3">Kerjakan Quiz</button>
+            <div class="card border-0 shadow rounded-4">
+
+                <div class="card-body text-center py-4">
+
+                    <h2 class="fw-bold text-primary">12</h2>
+
+                    <p class="text-muted mb-0">
+                        Quiz Tersedia
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
-        @endforeach
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow rounded-4">
+
+                <div class="card-body text-center py-4">
+
+                    <h2 class="fw-bold text-success">5</h2>
+
+                    <p class="text-muted mb-0">
+                        Sudah Dikerjakan
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow rounded-4">
+
+                <div class="card-body text-center py-4">
+
+                    <h2 class="fw-bold text-warning">87</h2>
+
+                    <p class="text-muted mb-0">
+                        Nilai Rata-rata
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- Riwayat Table Modern -->
-    <div class="card border-0 shadow-sm rounded-lg mt-2">
-        <div class="card-header bg-white border-0 pt-4">
-            <h5 class="font-weight-bold text-dark">Riwayat Quiz</h5>
+    {{-- Search --}}
+    <div class="card border-0 shadow rounded-4 mb-5">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-8">
+
+                    <input
+                        type="text"
+                        class="form-control rounded-pill"
+                        placeholder="Cari quiz...">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <select class="form-select rounded-pill">
+
+                        <option>Semua</option>
+                        <option>Pemrograman Web</option>
+                        <option>Basis Data</option>
+                        <option>Algoritma</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <button class="btn btn-primary w-100 rounded-pill">
+
+                        Cari
+
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="thead-light">
-                    <tr>
-                        <th class="border-0 pl-4">Quiz</th>
-                        <th class="border-0">Nilai</th>
-                        <th class="border-0">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="pl-4 font-weight-bold">Dasar Laravel</td>
-                        <td>90</td>
-                        <td><span class="badge badge-success px-3 rounded-pill">Lulus</span></td>
-                    </tr>
-                    <tr>
-                        <td class="pl-4 font-weight-bold">MySQL Dasar</td>
-                        <td>75</td>
-                        <td><span class="badge badge-warning px-3 rounded-pill text-dark">Remedial</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
     </div>
+
+    {{-- Quiz --}}
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <span class="badge bg-primary rounded-pill mb-3">
+
+                        Pemrograman Web
+
+                    </span>
+
+                    <h4 class="fw-bold">
+
+                        Dasar Laravel
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Pelajari dasar Laravel melalui 10 soal pilihan ganda.
+
+                    </p>
+
+                    <hr>
+
+                    <p class="mb-2">
+                        ⭐ Level : Mudah
+                    </p>
+
+                    <p class="mb-2">
+                        ⏱️ Durasi : 20 Menit
+                    </p>
+
+                    <p>
+                        👨‍🏫 Pak Maulana
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+
+                    <a href="#" class="btn btn-primary rounded-pill w-100">
+
+                        Kerjakan Quiz
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <span class="badge bg-success rounded-pill mb-3">
+
+                        Basis Data
+
+                    </span>
+
+                    <h4 class="fw-bold">
+
+                        MySQL Dasar
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Uji pemahaman SQL dan database.
+
+                    </p>
+
+                    <hr>
+
+                    <p class="mb-2">
+                        ⭐ Level : Sedang
+                    </p>
+
+                    <p class="mb-2">
+                        ⏱️ Durasi : 30 Menit
+                    </p>
+
+                    <p>
+                        👩‍🏫 Bu Sinta
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+
+                    <a href="#" class="btn btn-success rounded-pill w-100">
+
+                        Kerjakan Quiz
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <span class="badge bg-warning text-dark rounded-pill mb-3">
+
+                        Algoritma
+
+                    </span>
+
+                    <h4 class="fw-bold">
+
+                        Struktur Data
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Latih logika algoritma dan struktur data.
+
+                    </p>
+
+                    <hr>
+
+                    <p class="mb-2">
+                        ⭐ Level : Sulit
+                    </p>
+
+                    <p class="mb-2">
+                        ⏱️ Durasi : 40 Menit
+                    </p>
+
+                    <p>
+                        👨‍🏫 Pak Andi
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+
+                    <a href="#" class="btn btn-warning text-dark rounded-pill w-100">
+
+                        Kerjakan Quiz
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- Riwayat --}}
+    <div class="card border-0 shadow rounded-4 mt-5">
+
+        <div class="card-header bg-white border-0">
+
+            <h5 class="fw-bold mb-0">
+
+                Riwayat Quiz
+
+            </h5>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Quiz</th>
+
+                        <th>Nilai</th>
+
+                        <th>Status</th>
+
+                        <th>Tanggal</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Dasar Laravel</td>
+
+                        <td>90</td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Lulus
+                            </span>
+                        </td>
+
+                        <td>10 Juli 2026</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>MySQL Dasar</td>
+
+                        <td>75</td>
+
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                Remedial
+                            </span>
+                        </td>
+
+                        <td>8 Juli 2026</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
-@stop
+
+@endsection

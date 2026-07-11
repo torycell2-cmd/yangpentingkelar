@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:admin,guru'])->group(function () {
         Route::get('/guru/input-nilai', [GuruController::class, 'create']);
+        Route::view('/guru/quiz', 'guru.quiz_guru.index')
+        ->name('guru.quiz.index');
     });
 
     Route::middleware(['role:siswa,admin'])->group(function () {
