@@ -28,11 +28,20 @@ class ArticleController extends Controller
     }
 
     public function create()
-    {
-        $role = strtolower(auth()->user()->role);
+{
+    // Cek login manual
+    if (!auth()->check()) {
+        // Tulis session manual
+        session()->flash('error', 'Anda harus login terlebih dahulu!');
+        
+        // Redirect ke login
+        return redirect('/login'); 
+        }
 
+    // Cek role
+        $role = strtolower(auth()->user()->role);
         if ($role !== 'admin' && $role !== 'guru') {
-            return redirect()->route('articles.index')->with('error', 'Anda tidak memiliki akses untuk membuat artikel.');
+            return redirect()->route('articles.index')->with('error', 'Anda tidak memiliki akses.');
         }
 
         return view('articles.create');
