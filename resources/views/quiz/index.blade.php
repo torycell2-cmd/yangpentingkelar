@@ -5,8 +5,9 @@
 @section('content')
 
 <style>
+
 .hero{
-    background: linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
+    background:linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa);
     color:white;
     border-radius:20px;
     padding:35px;
@@ -41,7 +42,7 @@
 }
 
 .quiz-header{
-    height:130px;
+    height:120px;
     background:linear-gradient(135deg,#2563eb,#60a5fa);
     display:flex;
     justify-content:center;
@@ -55,39 +56,47 @@
 }
 
 .progress{
-    height:12px;
+    height:10px;
     border-radius:20px;
 }
 
-.table{
-    border-radius:15px;
-    overflow:hidden;
-}
 </style>
 
 <div class="container-fluid py-4">
 
-    {{-- Banner --}}
+    {{-- HERO --}}
+
     <div class="hero">
 
         <div class="row align-items-center">
 
             <div class="col-md-8">
 
-                <h2>👋 Selamat Datang!</h2>
+                <h2>👋 Selamat Datang</h2>
 
                 <p class="mb-0">
-                    Yuk kerjakan quiz dan tingkatkan kemampuanmu setiap hari 🚀
+
+                    Uji kemampuanmu melalui Quiz yang telah disediakan.
+
                 </p>
 
             </div>
 
             <div class="col-md-4 text-right">
 
-                <button class="btn btn-light rounded-pill px-4">
-                    <i class="fas fa-plus"></i>
-                    Buat Quiz
-                </button>
+                @if(in_array(strtolower(auth()->user()->role),['admin','guru']))
+
+                    <a
+                        href="{{ route('quiz.create') }}"
+                        class="btn btn-light rounded-pill px-4">
+
+                        <i class="fas fa-plus"></i>
+
+                        Buat Quiz
+
+                    </a>
+
+                @endif
 
             </div>
 
@@ -95,7 +104,8 @@
 
     </div>
 
-    {{-- Statistik --}}
+    {{-- STATISTIK --}}
+
     <div class="row mb-4">
 
         <div class="col-md-4">
@@ -106,7 +116,7 @@
 
                     <i class="fas fa-book fa-2x text-primary mb-3"></i>
 
-                    <h3>12</h3>
+                    <h3>{{ $quizzes->count() }}</h3>
 
                     <p>Total Quiz</p>
 
@@ -122,11 +132,15 @@
 
                 <div class="card-body text-center">
 
-                    <i class="fas fa-trophy fa-2x text-warning mb-3"></i>
+                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
 
-                    <h3>90</h3>
+                    <h3>
 
-                    <p>Nilai Tertinggi</p>
+                        {{ $quizzes->where('status','approved')->count() }}
+
+                    </h3>
+
+                    <p>Quiz Approved</p>
 
                 </div>
 
@@ -140,9 +154,13 @@
 
                 <div class="card-body text-center">
 
-                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                    <i class="fas fa-user-graduate fa-2x text-warning mb-3"></i>
 
-                    <h3>5</h3>
+                    <h3>
+
+                        {{ $results->count() }}
+
+                    </h3>
 
                     <p>Quiz Selesai</p>
 
@@ -154,23 +172,30 @@
 
     </div>
 
-    {{-- Search --}}
+    {{-- SEARCH --}}
+
     <div class="card border-0 shadow mb-4">
 
         <div class="card-body">
 
-            <form class="search-box">
+            <form
+                action="{{ route('quiz.index') }}"
+                method="GET"
+                class="search-box">
 
                 <div class="input-group">
 
                     <input
                         type="text"
+                        name="query"
                         class="form-control"
-                        placeholder="Cari quiz...">
+                        value="{{ request('query') }}"
+                        placeholder="Cari Quiz...">
 
                     <div class="input-group-append">
 
-                        <button class="btn btn-primary rounded-pill px-4">
+                        <button
+                            class="btn btn-primary rounded-pill px-4">
 
                             Cari
 
@@ -186,98 +211,283 @@
 
     </div>
 
-    {{-- Quiz --}}
+    {{-- LIST QUIZ --}}
+
     <div class="row">
 
-        @php
-            $quizzes=[
-            ['title'=>'Laravel Dasar','cat'=>'Pemrograman Web','soal'=>10],
-            ['title'=>'MySQL Dasar','cat'=>'Basis Data','soal'=>15],
-            ['title'=>'Struktur Data','cat'=>'Algoritma','soal'=>20],
-            ];
-        @endphp
+    @forelse($quizzes as $quiz)
 
-        @foreach($quizzes as $quiz)
+@php
 
-        <div class="col-lg-4 mb-4">
+    switch(strtolower($quiz->kategori)){
 
-            <div class="card quiz-card shadow">
+        case 'pemrograman web':
+            $color='primary';
+            $icon='fas fa-code';
+            break;
 
-                <div class="quiz-header">
+        case 'basis data':
+            $color='success';
+            $icon='fas fa-database';
+            break;
 
-                    <i class="fas fa-laptop-code"></i>
+        case 'algoritma':
+            $color='warning';
+            $icon='fas fa-project-diagram';
+            break;
 
-                </div>
+        case 'matematika':
+            $color='danger';
+            $icon='fas fa-square-root-alt';
+            break;
 
-                <div class="card-body">
+        default:
+            $color='info';
+            $icon='fas fa-book';
 
-                    <span class="badge badge-primary mb-2">
+    }
 
-                        {{ $quiz['cat'] }}
+@endphp
 
-                    </span>
+<div class="col-lg-4 mb-4">
 
-                    <h4 class="font-weight-bold">
+    <div class="card quiz-card shadow h-100">
 
-                        {{ $quiz['title'] }}
+        <div class="quiz-header bg-{{ $color }}">
 
-                    </h4>
-
-                    <p class="text-muted">
-
-                        {{ $quiz['soal'] }} Soal • 20 Menit
-
-                    </p>
-
-                    <div class="progress mb-3">
-
-                        <div
-                            class="progress-bar bg-success"
-                            style="width:65%">
-                        </div>
-
-                    </div>
-
-                    <button class="btn btn-primary btn-block rounded-pill">
-
-                        <i class="fas fa-play-circle"></i>
-
-                        Kerjakan Quiz
-
-                    </button>
-
-                </div>
-
-            </div>
+            <i class="{{ $icon }}"></i>
 
         </div>
 
-        @endforeach
+        <div class="card-body d-flex flex-column">
 
-    </div>
+            <span class="badge badge-{{ $color }} mb-2">
 
-    {{-- Riwayat --}}
-    <div class="card shadow border-0">
+                {{ $quiz->kategori }}
 
-        <div class="card-header bg-white">
+            </span>
 
             <h4 class="font-weight-bold">
 
-                📈 Riwayat Quiz
+                {{ $quiz->judul }}
+
+            </h4>
+
+            <p class="text-muted mb-1">
+
+                {{ $quiz->jumlah_soal }} Soal
+
+            </p>
+
+            <p class="text-muted mb-3">
+
+                ⏰ {{ $quiz->durasi }} Menit
+
+            </p>
+
+            <small class="text-secondary">
+
+                Dibuat oleh :
+                <strong>{{ $quiz->pembuat }}</strong>
+
+            </small>
+
+            <hr>
+
+            @if($quiz->status=='approved')
+
+                <span class="badge badge-success mb-3">
+
+                    Approved
+
+                </span>
+
+            @else
+
+                <span class="badge badge-warning mb-3">
+
+                    Pending
+
+                </span>
+
+            @endif
+
+            {{-- ================= ADMIN ================= --}}
+
+@if(strtolower(auth()->user()->role)=='admin')
+
+    @if($quiz->status=='pending')
+
+        <form
+            action="{{ route('quiz.approve',$quiz->id) }}"
+            method="POST">
+
+            @csrf
+            @method('PATCH')
+
+            <button class="btn btn-success btn-block">
+
+                <i class="fas fa-check"></i>
+
+                ACC Quiz
+
+            </button>
+
+        </form>
+
+    @else
+
+        <button
+            class="btn btn-secondary btn-block"
+            disabled>
+
+            Sudah Di-ACC
+
+        </button>
+
+    @endif
+
+@endif
+
+
+{{-- ================= GURU ================= --}}
+
+@if(strtolower(auth()->user()->role)=='guru')
+
+    @if($quiz->status=='approved')
+
+        <a
+            href="{{ route('questions.index',$quiz->id) }}"
+            class="btn btn-primary btn-block">
+
+            <i class="fas fa-edit"></i>
+
+            Tambah Soal
+
+        </a>
+
+    @else
+
+        <button
+            class="btn btn-warning btn-block"
+            disabled>
+
+            Menunggu ACC Admin
+
+        </button>
+
+    @endif
+
+@endif
+
+
+{{-- ================= SISWA ================= --}}
+
+@if(strtolower(auth()->user()->role)=='siswa')
+
+    @php
+
+        $hasil = $results->where('quiz_id',$quiz->id)->first();
+
+    @endphp
+
+    @if($quiz->status=='approved')
+
+        @if(!$hasil)
+
+            <a
+                href="{{ route('questions.play',$quiz->id) }}"
+                class="btn btn-primary btn-block">
+
+                <i class="fas fa-play"></i>
+
+                Kerjakan Quiz
+
+            </a>
+
+        @elseif($hasil->status=='Remedial')
+
+            <a
+                href="{{ route('questions.play',$quiz->id) }}"
+                class="btn btn-warning btn-block">
+
+                <i class="fas fa-redo"></i>
+
+                Kerjakan Remedial
+
+            </a>
+
+        @else
+
+            <button
+                class="btn btn-success btn-block"
+                disabled>
+
+                <i class="fas fa-check-circle"></i>
+
+                Sudah Lulus
+
+            </button>
+
+        @endif
+
+    @endif
+
+@endif
+
+        </div>
+
+    </div>
+
+</div>
+
+@empty
+
+<div class="col-12">
+
+    <div class="alert alert-info text-center">
+
+        Belum ada quiz.
+
+    </div>
+
+</div>
+
+@endforelse
+
+</div>
+
+{{-- ================= RIWAYAT QUIZ ================= --}}
+
+@if(strtolower(auth()->user()->role)=='siswa')
+
+<div class="card shadow border-0 mt-4">
+
+    <div class="card-header bg-white">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+
+                <i class="fas fa-history text-primary"></i>
+
+                Riwayat Quiz
 
             </h4>
 
         </div>
 
-        <div class="card-body p-0">
+    </div>
 
-            <table class="table table-hover">
+    <div class="card-body p-0">
 
-                <thead>
+        <table class="table table-hover mb-0">
+
+            <thead class="thead-light">
 
                 <tr>
 
-                    <th>Quiz</th>
+                    <th>Judul Quiz</th>
 
                     <th>Nilai</th>
 
@@ -285,53 +495,99 @@
 
                 </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
+            <tbody>
+
+            @forelse($results as $result)
 
                 <tr>
 
-                    <td>Laravel Dasar</td>
+                    <td>
 
-                    <td>95</td>
+                        {{ $result->quiz->judul }}
+
+                    </td>
 
                     <td>
 
-                        <span class="badge badge-success">
+                        <strong>
 
-                            Lulus
+                            {{ $result->nilai }}
 
-                        </span>
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        @if($result->status=='Lulus')
+
+                            <span class="badge badge-success">
+
+                                Lulus
+
+                            </span>
+
+                        @else
+
+                            <span class="badge badge-warning">
+
+                                Remedial
+
+                            </span>
+
+                        @endif
 
                     </td>
 
                 </tr>
 
+            @empty
+
                 <tr>
 
-                    <td>MySQL Dasar</td>
+                    <td colspan="3" class="text-center text-muted">
 
-                    <td>80</td>
-
-                    <td>
-
-                        <span class="badge badge-warning">
-
-                            Remedial
-
-                        </span>
+                        Belum pernah mengerjakan quiz.
 
                     </td>
 
                 </tr>
 
-                </tbody>
+            @endforelse
 
-            </table>
+            </tbody>
 
-        </div>
+        </table>
 
     </div>
+
+</div>
+
+@endif
+
+{{-- ================= ADMIN / GURU ================= --}}
+
+@if(in_array(strtolower(auth()->user()->role),['admin','guru']))
+
+<div class="text-right mt-4">
+
+    <a
+
+        href="{{ route('quiz.results') }}"
+
+        class="btn btn-success">
+
+        <i class="fas fa-chart-bar"></i>
+
+        Lihat Hasil Quiz
+
+    </a>
+
+</div>
+
+@endif
 
 </div>
 

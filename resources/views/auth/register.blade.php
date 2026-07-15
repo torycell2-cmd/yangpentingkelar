@@ -25,9 +25,14 @@
             <a href="/" class="h1 text-dark text-decoration-none"><b>Edu</b>Learn</a>
         </div>
         <div class="card-body pb-4">
-            @php $role = ucfirst(request()->query('role', 'Siswa')); @endphp
-            <p class="login-box-msg text-muted">Daftar akun baru sebagai <b>{{ $role }}</b></p>
-            
+@php
+    $role = ucfirst(request()->query('role', 'siswa'));
+@endphp
+
+        <p class="login-box-msg text-muted">
+            Daftar akun baru sebagai
+            <b>{{ $role }}</b>
+        </p>
             <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <input type="hidden" name="role" value="{{ request()->query('role', 'siswa') }}">
