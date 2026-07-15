@@ -23,7 +23,7 @@ class CheckRole
         if(in_array($request->user()->role, $Roles)){
             return $next($request);
         }
-        //jika tidak ada akses maka diarahkan ke Dashboard
+        //jika tidak ada akses maka diarahkan ke Dashboardar
         return redirect('/dashboard')->with('error', 'anda tidak dapat login dan mengakses ke laman ini!');
     }
 }

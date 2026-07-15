@@ -25,13 +25,17 @@
             <a href="/" class="h1 text-dark text-decoration-none"><b>Edu</b>Learn</a>
         </div>
         <div class="card-body pb-4">
-            @php $role = request()->query('role', 'Siswa'); @endphp
-            @php $role = request()->query('role', 'guru'); @endphp
-            <p class="login-box-msg text-muted">Daftar akun baru sebagai <b>{{ ucfirst($role) }}</b></p>
+@php
+    $role = ucfirst(request()->query('role', 'siswa'));
+@endphp
 
+        <p class="login-box-msg text-muted">
+            Daftar akun baru sebagai
+            <b>{{ $role }}</b>
+        </p>
             <form action="{{ route('register') }}" method="POST">
                 @csrf
-                <input type="hidden" name="role" value="{{ $role }}">
+                <input type="hidden" name="role" value="{{ request()->query('role', 'siswa') }}">
 
                 <div class="input-group mb-3">
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Nama Lengkap" value="{{ old('name') }}" required>

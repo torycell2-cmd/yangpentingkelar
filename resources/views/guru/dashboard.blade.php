@@ -7,18 +7,79 @@
         background: #f8fafc; 
     }
 
-    .dashboard-title {
+    .~dashboard-title {
         font-weight: 700;
         color: #0f172a;
         letter-spacing: -0.02em;
     }
 
+    /* Style Tambahan untuk Dropdown Profil Ala Copilot/Modern */
+    .profile-dropdown-menu {
+        border: none;
+        border-radius: 20px;
+        background: #1e293b; /* Dark theme ala gambar pertama */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        padding: 20px;
+        min-width: 280px;
+    }
+
+    .profile-dropdown-menu .user-name {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .profile-dropdown-menu .user-email {
+        color: #94a3b8;
+        font-size: 0.85rem;
+    }
+
+    .profile-dropdown-menu .dropdown-item {
+        color: #cbd5e1;
+        padding: 10px 12px;
+        border-radius: 10px;
+        transition: all 0.2s;
+    }
+
+    .profile-dropdown-menu .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+    }
+
+    .profile-dropdown-menu .btn-signout {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .profile-dropdown-menu .btn-signout:hover {
+        background: #ef4444; /* Berubah merah saat hover */
+        color: #ffffff;
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #3b82f6;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Style Bawaan Anda sebelumnya */
     .hero-card {
         position: relative;
         overflow: hidden;
         border: none;
         border-radius: 20px;
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8); /* Gradasi biru yang lebih cerah dan hidup */
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
         color: #ffffff;
         box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
     }
@@ -48,25 +109,6 @@
     .hero-content {
         position: relative;
         z-index: 2;
-    }
-
-    .avatar-circle {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: #ffffff;
-        color: #2563eb;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 30px;
-        font-weight: 700;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-    
-    .avatar-circle:hover {
-        transform: scale(1.05);
     }
 
     .stat-card {
@@ -157,16 +199,51 @@
             <h2 class="dashboard-title m-0">Dashboard Guru</h2>
             <p class="text-secondary small m-0">Pantau dan kelola aktivitas belajar mengajar Anda.</p>
         </div>
-        <span class="badge bg-white text-secondary border px-3 py-2 rounded-pill d-inline-flex align-items-center shadow-sm">
-            <i class="far fa-calendar-alt me-2 text-primary"></i>
-            {{ now()->translatedFormat('l, d F Y') }}
-        </span>
+        
+        <div class="d-flex align-items-center gap-3">
+            <!-- Badge Tanggal -->
+            <span class="badge bg-white text-secondary border px-3 py-2 rounded-pill d-inline-flex align-items-center shadow-sm">
+                <i class="far fa-calendar-alt me-2 text-primary"></i>
+                {{ now()->translatedFormat('l, d F Y') }}
+            </span>
+
+            <!-- Dropdown Profil Baru (Posisi di bawah navbar / kanan atas konten) -->
+            <div class="dropdown">
+                <div class="avatar-circle shadow-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}
+                </div>
+                
+                <div class="dropdown-menu dropdown-menu-end profile-dropdown-menu mt-2" aria-labelledby="profileDropdown">
+                    <!-- Bagian Atas: Nama & Email -->
+                    <div class="mb-3">
+                        <div class="user-name">{{ auth()->user()->name ?? 'Nama Guru' }}</div>
+                        <div class="user-email">{{ auth()->user()->email ?? 'guru@edulearn.com' }}</div>
+                    </div>
+                    <hr class="text-secondary opacity-25">
+                    
+                    <!-- Bagian Tengah: Navigasi/Menu Tambahan -->
+                    <ul class="list-unstyled mb-3">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2"></i> Memory</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-bell me-2"></i> Reminders</a></li>
+                    </ul>
+                    <hr class="text-secondary opacity-25">
+                    
+                    <!-- Bagian Bawah: Tombol Sign Out (Sesuai contoh foto pertama) -->
+                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn btn-signout w-100 py-2">Sign out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Hero Card -->
     <div class="card hero-card mb-4">
         <div class="card-body p-4 p-md-5 hero-content">
             <div class="row align-items-center gy-4">
-                <div class="col-lg-8 text-center text-lg-start">
+                <div class="col-lg-12 text-center text-lg-start">
                     <span class="badge bg-white text-primary px-3 py-2 mb-3 rounded-pill fw-semibold shadow-sm">
                         <i class="fas fa-user-tie me-2"></i>Teacher Panel
                     </span>
@@ -181,28 +258,6 @@
                         <a href="#" class="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">
                             <i class="fas fa-file-signature me-2"></i>Buat Quiz
                         </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 d-flex justify-content-center">
-                    <div class="dropdown">
-                        <a href="#" class="text-white text-decoration-none dropdown-toggle d-block text-center" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="avatar-circle mx-auto mb-3">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                            </div>
-                            <h5 class="mb-1 text-white fw-bold">{{ auth()->user()->name }}</h5>
-                            <small class="text-white-50">Guru Pengajar</small>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger py-2">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -314,7 +369,7 @@
 
     <!-- Main Section (2 Columns) -->
     <div class="row g-4">
-        <!-- Left Side (Menu Cepat & Tabel Artikel) -->
+        <!-- Left Side -->
         <div class="col-lg-8">
             <!-- Menu Cepat -->
             <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -430,9 +485,9 @@
             </div>
         </div>
 
-        <!-- Right Side (Notes, Progress, Tips, dll) -->
+        <!-- Right Side -->
         <div class="col-lg-4">
-            <!-- Notes -->
+            <!-- Informasi Penting -->
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
                     <h5 class="fw-bold mb-0 text-dark">
@@ -483,23 +538,13 @@
                             <div class="progress-bar bg-success" style="width:85%">85%</div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="small fw-semibold text-secondary">Forum Diskusi</span>
-                            <span class="small fw-bold text-info">60%</span>
-                        </div>
-                        <div class="progress progress-lg">
-                            <div class="progress-bar bg-info" style="width:60%">60%</div>
-                        </div>
-                    </div>
-                    <hr class="text-secondary my-3 opacity-25">
-                    <p class="text-muted small text-center m-0 italic">"Terima kasih atas dedikasinya untuk memajukan pendidikan siswa!"</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bottom Section (Activity, Target, Tips & Info) -->
+<!-- Bottom Section (Activity, Target, Tips & Info) -->
     <div class="row g-4 mt-1">
         <!-- Aktivitas Terbaru -->
         <div class="col-lg-4">
@@ -634,5 +679,6 @@
     </div>
 
 </div>
+
 
 @endsection

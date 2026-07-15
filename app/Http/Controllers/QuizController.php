@@ -21,7 +21,7 @@ class QuizController extends Controller
 
         });
 
-        if($role != 'admin'){
+        if($role == 'siswa'){
             $quizzes->where('status','approved');
         }
 
