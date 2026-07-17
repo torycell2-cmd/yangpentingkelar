@@ -1,5 +1,5 @@
 @php( $logout_url = View::getSection('logout_url') ?? config('adminlte.logout_url', 'logout') )
-@php( $profile_url = View::getSection('profile_url') ?? config('adminlte.profile_url', 'logout') )
+@php( $profile_url = url('/profile') )
 
 @if (config('adminlte.usermenu_profile_url', false))
     @php( $profile_url = Auth::user()->adminlte_profile_url() )
@@ -61,26 +61,28 @@
         @endif
 
         {{-- User menu footer --}}
-        <li class="user-footer">
-            @if($profile_url)
-                <a href="{{ $profile_url }}" class="nav-link btn btn-default btn-flat d-inline-block">
-                    <i class="fa fa-fw fa-user text-lightblue"></i>
-                    {{ __('adminlte::menu.profile') }}
-                </a>
-            @endif
-            <a class="btn btn-default btn-flat float-right @if(!$profile_url) btn-block @endif"
-               href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-fw fa-power-off text-red"></i>
-                {{ __('adminlte::adminlte.log_out') }}
-            </a>
-            <form id="logout-form" action="{{ $logout_url }}" method="POST" style="display: none;">
-                @if(config('adminlte.logout_method'))
-                    {{ method_field(config('adminlte.logout_method')) }}
+        <li class="user-footer" style="padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+    {{-- Grup tombol atas --}}
+            <div style="display: flex; gap: 8px;">
+                @if($profile_url)
+                    <a href="{{ $profile_url }}" class="btn btn-default btn-flat" style="flex: 1; text-align: center;">
+                        <i class="fa fa-fw fa-user text-lightblue"></i> Profil
+                    </a>
                 @endif
-                {{ csrf_field() }}
+                <a href="{{ route('friends.index') }}" class="btn btn-default btn-flat" style="flex: 1; text-align: center;">
+                    <i class="fa fa-fw fa-users text-lightblue"></i> Teman
+                </a>
+            </div>
+
+    {{-- Tombol Logout sendiri di bawah --}}
+            <a class="btn btn-default btn-flat" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fa fa-fw fa-power-off text-red"></i> {{ __('adminlte::adminlte.log_out') }}
+            </a>
+
+            <form id="logout-form" action="{{ $logout_url }}" method="POST" style="display: none;">
+                @csrf
             </form>
         </li>
-
     </ul>
 
 </li>

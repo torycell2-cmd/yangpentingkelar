@@ -1,14 +1,19 @@
-<li class="nav-item">
-    <a class="nav-link" href="#" data-widget="control-sidebar"
-        @if(!config('adminlte.right_sidebar_slide'))
-            data-controlsidebar-slide="false"
-        @endif
-        @if(config('adminlte.right_sidebar_scrollbar_theme', 'os-theme-light') != 'os-theme-light')
-            data-scrollbar-theme="{{ config('adminlte.right_sidebar_scrollbar_theme') }}"
-        @endif
-        @if(config('adminlte.right_sidebar_scrollbar_auto_hide', 'l') != 'l')
-            data-scrollbar-auto-hide="{{ config('adminlte.right_sidebar_scrollbar_auto_hide') }}"
-        @endif>
-        <i class="{{ config('adminlte.right_sidebar_icon') }}"></i>
+{{-- Dropdown Daftar Teman --}}
+<li class="nav-item dropdown">
+    <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="fas fa-users"></i>
+        <span class="badge badge-warning navbar-badge">{{ count($myFriends ?? []) }}</span>
     </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <span class="dropdown-item dropdown-header">{{ count($myFriends ?? []) }} Teman Anda</span>
+        <div class="dropdown-divider"></div>
+        
+        @forelse($myFriends as $friend)
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-user mr-2"></i> {{ $friend->name }}
+            </a>
+        @empty
+            <span class="dropdown-item text-muted text-sm text-center">Belum ada teman</span>
+        @endforelse
+    </div>
 </li>
