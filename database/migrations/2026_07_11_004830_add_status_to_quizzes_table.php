@@ -8,17 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('quizzes', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'approved'])
-                  ->default('pending')
-                  ->after('pembuat');
-        });
+        
     }
 
     public function down(): void
     {
-        Schema::table('quizzes', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        
     }
 };

@@ -15,6 +15,13 @@ class DashboardController extends Controller
             return view('admin.dashboard');
         }elseif ($user->role =='guru'){
             return view('guru.dashboard');
+        }elseif ($user->role == 'siswa'){
+            return view('siswa.dashboard' ,[
+                'totalArtikel' => 0,
+                'totalQuestion' => 0,
+                'totalQuiz' => 0,
+                'totalForum' => 0,
+            ]);
         }
     }
         //buat siswa loginnya ke arah dasboard pada umumnya
