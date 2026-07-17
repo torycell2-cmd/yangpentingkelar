@@ -1,4 +1,4 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
 
 @section('content')
 
@@ -7,11 +7,45 @@
         background: #f8fafc; 
     }
 
-    .~dashboard-title {
+    .dashboard-title {
         font-weight: 700;
         color: #0f172a;
         letter-spacing: -0.02em;
     }
+
+    /* ============================================================
+       POLYFILL: Utility class Bootstrap 5 yang tidak ada di
+       Bootstrap 4 (dipakai AdminLTE 3). Tanpa ini, class-class
+       seperti gap-2, rounded-4, fw-bold, bg-opacity-10 dll
+       diabaikan browser dan style jadi berantakan.
+       ============================================================ */
+    .gap-2 { gap: 0.5rem !important; }
+    .gap-3 { gap: 1rem !important; }
+
+    .rounded-4 { border-radius: 1rem !important; }
+
+    .fw-bold { font-weight: 700 !important; }
+    .fw-semibold { font-weight: 600 !important; }
+    .fw-medium { font-weight: 500 !important; }
+    .fw-light { font-weight: 300 !important; }
+
+    .fs-5 { font-size: 1.25rem !important; }
+
+    .text-opacity-75 { opacity: 0.75; }
+
+    .bg-primary.bg-opacity-10 { background-color: rgba(59,130,246,0.1) !important; color: #3b82f6 !important; }
+    .bg-success.bg-opacity-10 { background-color: rgba(34,197,94,0.1) !important; color: #16a34a !important; }
+    .bg-warning.bg-opacity-10 { background-color: rgba(245,158,11,0.1) !important; color: #d97706 !important; }
+    .bg-danger.bg-opacity-10  { background-color: rgba(239,68,68,0.1) !important; color: #dc2626 !important; }
+    .bg-info.bg-opacity-10    { background-color: rgba(6,182,212,0.1) !important; color: #0891b2 !important; }
+
+    /* Pengganti gy-4 / gutter-y (BS4 tidak punya utility gutter otomatis) */
+    .row.g-3 > [class*="col-"],
+    .row.g-4 > [class*="col-"],
+    .row.gy-4 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    /* ============================================================ */
 
     /* Style Tambahan untuk Dropdown Profil Ala Copilot/Modern */
     .profile-dropdown-menu {
@@ -207,13 +241,13 @@
                 {{ now()->translatedFormat('l, d F Y') }}
             </span>
 
-            <!-- Dropdown Profil Baru (Posisi di bawah navbar / kanan atas konten) -->
+            <!-- Dropdown Profil (data-toggle untuk BS4/AdminLTE, data-bs-toggle dibiarkan sbg fallback) -->
             <div class="dropdown">
-                <div class="avatar-circle shadow-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="avatar-circle shadow-sm" id="profileDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}
                 </div>
                 
-                <div class="dropdown-menu dropdown-menu-end profile-dropdown-menu mt-2" aria-labelledby="profileDropdown">
+                <div class="dropdown-menu dropdown-menu-right profile-dropdown-menu mt-2" aria-labelledby="profileDropdown">
                     <!-- Bagian Atas: Nama & Email -->
                     <div class="mb-3">
                         <div class="user-name">{{ auth()->user()->name ?? 'Nama Guru' }}</div>
@@ -229,7 +263,7 @@
                     </ul>
                     <hr class="text-secondary opacity-25">
                     
-                    <!-- Bagian Bawah: Tombol Sign Out (Sesuai contoh foto pertama) -->
+                    <!-- Bagian Bawah: Tombol Sign Out -->
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
                         <button type="submit" class="btn btn-signout w-100 py-2">Sign out</button>
@@ -243,7 +277,7 @@
     <div class="card hero-card mb-4">
         <div class="card-body p-4 p-md-5 hero-content">
             <div class="row align-items-center gy-4">
-                <div class="col-lg-12 text-center text-lg-start">
+                <div class="col-lg-12 text-center text-lg-left">
                     <span class="badge bg-white text-primary px-3 py-2 mb-3 rounded-pill fw-semibold shadow-sm">
                         <i class="fas fa-user-tie me-2"></i>Teacher Panel
                     </span>
@@ -272,10 +306,10 @@
                 <div class="card-body d-flex flex-column justify-content-between p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <span class="text-secondary small fw-medium text-uppercase tracking-wider d-block mb-1">Total Artikel</span>
+                            <span class="text-secondary small fw-medium text-uppercase d-block mb-1">Total Artikel</span>
                             <h2 class="fw-bold m-0" style="color: #0f172a;">12</h2>
                         </div>
-                        <div class="stat-icon bg-primary bg-gradient shadow-sm">
+                        <div class="stat-icon bg-primary shadow-sm">
                             <i class="fas fa-newspaper"></i>
                         </div>
                     </div>
@@ -297,10 +331,10 @@
                 <div class="card-body d-flex flex-column justify-content-between p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <span class="text-secondary small fw-medium text-uppercase tracking-wider d-block mb-1">Menunggu ACC</span>
+                            <span class="text-secondary small fw-medium text-uppercase d-block mb-1">Menunggu ACC</span>
                             <h2 class="fw-bold m-0" style="color: #0f172a;">3</h2>
                         </div>
-                        <div class="stat-icon bg-warning bg-gradient shadow-sm">
+                        <div class="stat-icon bg-warning shadow-sm">
                             <i class="fas fa-clock"></i>
                         </div>
                     </div>
@@ -322,10 +356,10 @@
                 <div class="card-body d-flex flex-column justify-content-between p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <span class="text-secondary small fw-medium text-uppercase tracking-wider d-block mb-1">Quiz Dibuat</span>
+                            <span class="text-secondary small fw-medium text-uppercase d-block mb-1">Quiz Dibuat</span>
                             <h2 class="fw-bold m-0" style="color: #0f172a;">8</h2>
                         </div>
-                        <div class="stat-icon bg-success bg-gradient shadow-sm">
+                        <div class="stat-icon bg-success shadow-sm">
                             <i class="fas fa-file-alt"></i>
                         </div>
                     </div>
@@ -347,10 +381,10 @@
                 <div class="card-body d-flex flex-column justify-content-between p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <span class="text-secondary small fw-medium text-uppercase tracking-wider d-block mb-1">Forum</span>
+                            <span class="text-secondary small fw-medium text-uppercase d-block mb-1">Forum</span>
                             <h2 class="fw-bold m-0" style="color: #0f172a;">24</h2>
                         </div>
-                        <div class="stat-icon bg-info bg-gradient shadow-sm">
+                        <div class="stat-icon bg-info shadow-sm">
                             <i class="fas fa-comments"></i>
                         </div>
                     </div>
@@ -443,39 +477,39 @@
                                 <th class="border-0 px-3">Judul</th>
                                 <th class="border-0">Status</th>
                                 <th class="border-0">Tanggal</th>
-                                <th class="border-0 text-end px-3">Aksi</th>
+                                <th class="border-0 text-right px-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="px-3 fw-medium text-dark">Laravel Dasar</td>
-                                <td><span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill fw-semibold">Pending</span></td>
+                                <td><span class="badge bg-warning bg-opacity-10 px-3 py-2 rounded-pill fw-semibold">Pending</span></td>
                                 <td class="text-secondary">09 Juli 2026</td>
-                                <td class="text-end px-3">
+                                <td class="text-right px-3">
                                     <button class="btn btn-sm btn-outline-primary rounded-pill px-3">Detail</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-3 fw-medium text-dark">Bootstrap 5</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">Publish</span></td>
+                                <td><span class="badge bg-success bg-opacity-10 px-3 py-2 rounded-pill fw-semibold">Publish</span></td>
                                 <td class="text-secondary">05 Juli 2026</td>
-                                <td class="text-end px-3">
+                                <td class="text-right px-3">
                                     <button class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-3 fw-medium text-dark">PHP Native</td>
-                                <td><span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-semibold">Ditolak</span></td>
+                                <td><span class="badge bg-danger bg-opacity-10 px-3 py-2 rounded-pill fw-semibold">Ditolak</span></td>
                                 <td class="text-secondary">03 Juli 2026</td>
-                                <td class="text-end px-3">
+                                <td class="text-right px-3">
                                     <button class="btn btn-sm btn-outline-danger rounded-pill px-3">Edit</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-3 fw-medium text-dark">CSS Responsive</td>
-                                <td><span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">Publish</span></td>
+                                <td><span class="badge bg-success bg-opacity-10 px-3 py-2 rounded-pill fw-semibold">Publish</span></td>
                                 <td class="text-secondary">28 Juni 2026</td>
-                                <td class="text-end px-3">
+                                <td class="text-right px-3">
                                     <button class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</button>
                                 </td>
                             </tr>
@@ -542,9 +576,8 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bottom Section (Activity, Target, Tips & Info) -->
+    <!-- Bottom Section (Activity, Target, Tips & Info) -->
     <div class="row g-4 mt-1">
         <!-- Aktivitas Terbaru -->
         <div class="col-lg-4">
@@ -563,7 +596,7 @@
                         <div class="flex-grow-1">
                             <h6 class="fw-bold text-dark mb-1 fs-6">Artikel Laravel Dasar</h6>
                             <p class="text-muted small m-0">Dikirim untuk verifikasi Admin</p>
-                            <span class="badge bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-pill small mt-2 fw-semibold">Pending</span>
+                            <span class="badge bg-warning bg-opacity-10 px-2 py-1 rounded-pill small mt-2 fw-semibold">Pending</span>
                         </div>
                     </div>
                     <hr class="text-secondary opacity-10 my-3">
@@ -576,7 +609,7 @@
                         <div class="flex-grow-1">
                             <h6 class="fw-bold text-dark mb-1 fs-6">Quiz HTML Dasar</h6>
                             <p class="text-muted small m-0">Selesai dibuat & diterbitkan</p>
-                            <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small mt-2 fw-semibold">Published</span>
+                            <span class="badge bg-success bg-opacity-10 px-2 py-1 rounded-pill small mt-2 fw-semibold">Published</span>
                         </div>
                     </div>
                     <hr class="text-secondary opacity-10 my-3">
@@ -666,11 +699,11 @@
     <div class="card border-0 shadow-sm rounded-4 mt-4">
         <div class="card-body p-4">
             <div class="row align-items-center gy-2">
-                <div class="col-md-8 text-center text-md-start">
+                <div class="col-md-8 text-center text-md-left">
                     <h6 class="fw-bold mb-1 text-dark">EduLearn Teacher Dashboard</h6>
                     <p class="text-secondary small m-0">Sistem manajemen belajar modern berbasis web untuk efisiensi mengajar.</p>
                 </div>
-                <div class="col-md-4 text-center text-md-end">
+                <div class="col-md-4 text-center text-md-right">
                     <small class="text-muted d-block">Version 1.0</small>
                     <small class="text-muted">© {{ date('Y') }} EduLearn. All rights reserved.</small>
                 </div>
@@ -679,6 +712,5 @@
     </div>
 
 </div>
-
 
 @endsection
