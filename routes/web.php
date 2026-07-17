@@ -15,18 +15,50 @@ Route::redirect('/', '/dashboard');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::resource('forum', ForumController::class);
-Route::post('/forum/{id}/comment', [ForumController::class, 'storeComment'])->name('forum.comment');
-Route::get('/comment/{id}/edit', [ForumController::class, 'editComment'])->name('comment.edit');
-Route::put('/comment/{id}', [ForumController::class, 'updateComment'])->name('comment.update');
-Route::delete('/comment/{id}', [ForumController::class, 'destroyComment'])->name('comment.destroy');
+/*
+|--------------------------------------------------------------------------
+| FORUM
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/ai-tutor', [AiTutorController::class, 'index'])->name('ai.index');
+Route::resource('forum', ForumController::class);
+
+Route::post('/forum/{id}/comment', [ForumController::class, 'storeComment'])
+    ->name('forum.comment');
+
+Route::get('/comment/{id}/edit', [ForumController::class, 'editComment'])
+    ->name('comment.edit');
+
+Route::put('/comment/{id}', [ForumController::class, 'updateComment'])
+    ->name('comment.update');
+
+Route::delete('/comment/{id}', [ForumController::class, 'destroyComment'])
+    ->name('comment.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| AI TUTOR
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/ai-tutor', [AiTutorController::class, 'index'])
+    ->name('ai.index');
+
+/*
+|--------------------------------------------------------------------------
+| REGISTER
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/register-choice', function () {
     return view('auth.register_choice');
 })->name('register.choice');
-Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+
+/*
+|--------------------------------------------------------------------------
+| AUTH REQUIRED
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth'])->group(function () {
 
@@ -36,12 +68,31 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
-    Route::get('/articles/search', [ArticleController::class, 'index'])->name('articles.search');
-    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
-    Route::resource('articles', ArticleController::class)->except(['index', 'create', 'store']);
+    Route::get('/articles', [ArticleController::class, 'index'])
+        ->name('articles.index');
 
-   /*
+    Route::get('/articles/search', [ArticleController::class, 'index'])
+        ->name('articles.search');
+
+    Route::get('/articles/create', [ArticleController::class, 'create'])
+        ->name('articles.create');
+
+    Route::post('/articles', [ArticleController::class, 'store'])
+        ->name('articles.store');
+
+    Route::get('/articles/{article}', [ArticleController::class, 'show'])
+        ->name('articles.show');
+
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])
+        ->name('articles.edit');
+
+    Route::put('/articles/{article}', [ArticleController::class, 'update'])
+        ->name('articles.update');
+
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+        ->name('articles.destroy');
+
+    /*
     |--------------------------------------------------------------------------
     | QUIZ
     |--------------------------------------------------------------------------
@@ -59,32 +110,36 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-        Route::get('/quiz/{quiz}/questions',
-            [QuestionController::class, 'index'])
-            ->name('questions.index');
+    Route::get('/quiz/{quiz}/questions',
+        [QuestionController::class, 'index'])
+        ->name('questions.index');
 
-        Route::get('/quiz/{quiz}/questions/create',
-            [QuestionController::class, 'create'])
-            ->name('questions.create');
+    Route::get('/quiz/{quiz}/questions/create',
+        [QuestionController::class, 'create'])
+        ->name('questions.create');
 
-        Route::post('/quiz/{quiz}/questions',
-            [QuestionController::class, 'store'])
-            ->name('questions.store');
+    Route::post('/quiz/{quiz}/questions',
+        [QuestionController::class, 'store'])
+        ->name('questions.store');
 
-        Route::get('/quiz/{quiz}/play', [QuestionController::class, 'play'])
-            ->name('questions.play');
+    Route::get('/quiz/{quiz}/play',
+        [QuestionController::class, 'play'])
+        ->name('questions.play');
 
-        Route::post('/quiz/{quiz}/submit', [QuestionController::class, 'submit'])
-            ->name('questions.submit');
-            
-    /* ===========================
-        HASIL QUIZ
-        ===========================
+    Route::post('/quiz/{quiz}/submit',
+        [QuestionController::class, 'submit'])
+        ->name('questions.submit');
+
+    /*
+    |--------------------------------------------------------------------------
+    | HASIL QUIZ
+    |--------------------------------------------------------------------------
     */
 
-        Route::get('/quiz-results',
-            [QuizController::class, 'results'])
-            ->name('quiz.results');
+    Route::get('/quiz-results',
+        [QuizController::class, 'results'])
+        ->name('quiz.results');
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN
@@ -93,7 +148,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
 
-        Route::get('/admin/dashboard', [AdminController::class, 'index']);
+        Route::get('/admin/dashboard',
+            [AdminController::class, 'index']);
+
+        Route::get('/admin/articles/pending',
+            [ArticleController::class, 'pending'])
+            ->name('admin.articles.pending');
 
         Route::patch('/admin/articles/{id}/approve',
             [ArticleController::class, 'approve'])

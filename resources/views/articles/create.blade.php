@@ -1,46 +1,91 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title', 'Tambah Artikel')
 
 @section('content')
+
 <div class="container-fluid pt-4">
-    <h1 class="mb-4">➕ Tambah Artikel</h1>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">➕ Tambah Artikel</h3>
+        </div>
 
-            <form action="{{ route('articles.store') }}" method="POST">
-                @csrf
+        <form action="{{ route('articles.store') }}" method="POST">
+            @csrf
 
-                <div class="mb-3">
-                    <label class="form-label">Judul Artikel</label>
-                    <input type="text" name="title" class="form-control" placeholder="Masukkan judul materi" required>
+            <div class="card-body">
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="form-group">
+                    <label>Judul Artikel</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        value="{{ old('title') }}"
+                        placeholder="Masukkan judul artikel"
+                        required>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Author</label>
-                    <input type="text" name="author" class="form-control" value="{{ auth()->user()->name }}" required readonly>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input
+                        type="text"
+                        name="author"
+                        class="form-control"
+                        value="{{ auth()->user()->name }}"
+                        readonly>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Kategori</label>
-                    <input type="text" name="category" class="form-control" placeholder="Contoh: Pemrograman, Jaringan" required>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input
+                        type="text"
+                        name="category"
+                        class="form-control"
+                        value="{{ old('category') }}"
+                        placeholder="Contoh : Pemrograman Web"
+                        required>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Konten Artikel</label>
-                    <textarea name="content" rows="6" class="form-control" placeholder="Tuliskan isi materi edukasi di sini..." required></textarea>
+                <div class="form-group">
+                    <label>Konten Artikel</label>
+                    <textarea
+                        name="content"
+                        rows="8"
+                        class="form-control"
+                        placeholder="Tulis isi artikel di sini..."
+                        required>{{ old('content') }}</textarea>
                 </div>
+
+            </div>
+
+            <div class="card-footer">
 
                 <button type="submit" class="btn btn-success">
-                    💾 Simpan Artikel
+                    <i class="fas fa-save"></i> Simpan Artikel
                 </button>
 
                 <a href="{{ route('articles.index') }}" class="btn btn-secondary">
-                    Kembali
+                    <i class="fas fa-arrow-left"></i> Kembali
                 </a>
 
-            </form>
+            </div>
 
-        </div>
+        </form>
+
     </div>
+
 </div>
+
 @endsection
