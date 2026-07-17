@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ProfileController;
 
 Route::redirect('/', '/dashboard');
 
@@ -126,5 +127,15 @@ Route::middleware(['auth'])->group(function () {
             [SiswaController::class, 'index']);
 
     });
-
+    Route::get('/profile', function () {
+        return "Halaman Profil Belum Dibuat. Nanti diganti dengan view ya min!";
+    });
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });

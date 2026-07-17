@@ -1,4 +1,4 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
 
 @section('content')
 <div class="container-fluid py-4" style="background:#f4f8fc; min-height:100vh;">
