@@ -35,4 +35,9 @@ class User extends Authenticatable
         'password',
         'role'
     ];
+    // Relasi untuk mendapatkan daftar teman
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id');
+    }
 }

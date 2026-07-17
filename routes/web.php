@@ -11,6 +11,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FriendController;
 
 Route::redirect('/', '/dashboard');
 
@@ -23,6 +24,20 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 */
 
 Route::resource('forum', ForumController::class);
+
+
+Route::post('/forum/{id}/comment', [ForumController::class, 'storeComment'])->name('forum.comment');
+Route::get('/comment/{id}/edit', [ForumController::class, 'editComment'])->name('comment.edit');
+Route::put('/comment/{id}', [ForumController::class, 'updateComment'])->name('comment.update');
+Route::delete('/comment/{id}', [ForumController::class, 'destroyComment'])->name('comment.destroy');
+Route::post('/friend/add/{id}', [FriendController::class, 'addFriend'])->name('friend.add');
+/*
+======================================================================== 
+fitur add friend 
+===========================================================================
+*/
+Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
+Route::delete('/friend/unfriend/{id}', [FriendController::class, 'unfriend'])->name('friend.unfriend');
 
 Route::post('/forum/{id}/comment', [ForumController::class, 'storeComment'])
     ->name('forum.comment');
@@ -198,4 +213,9 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    /*
+    |--------------------------------------------------------------------------
+    | add friend
+    |--------------------------------------------------------------------------
+    */
 });
