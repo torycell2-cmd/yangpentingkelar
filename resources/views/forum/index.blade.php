@@ -14,7 +14,7 @@ body{
     background:linear-gradient(135deg,#2563eb,#60a5fa);
     color:white;
     border-radius:20px;
-    padding:35px;
+    padding:40px;
     margin-bottom:25px;
 }
 
@@ -22,11 +22,22 @@ body{
     font-weight:bold;
 }
 
+.stat-card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+}
+
 .search-box{
     background:white;
-    border-radius:15px;
+    border-radius:20px;
     padding:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
     margin-bottom:25px;
 }
 
@@ -35,21 +46,18 @@ body{
 }
 
 .forum-card{
-
     border:none;
     border-radius:20px;
+    overflow:hidden;
     transition:.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 .forum-card:hover{
-
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(0,0,0,.12);
-
+    transform:translateY(-5px);
 }
 
 .avatar{
-
     width:60px;
     height:60px;
     border-radius:50%;
@@ -58,24 +66,15 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:25px;
+    font-size:24px;
     font-weight:bold;
-
 }
 
 .badge-category{
-
     background:#2563eb;
     color:white;
     border-radius:30px;
-    padding:7px 15px;
-
-}
-
-.action-btn{
-
-    border-radius:30px;
-
+    padding:7px 18px;
 }
 
 </style>
@@ -84,29 +83,76 @@ body{
 
 <div class="hero">
 
-<div class="row align-items-center">
+<div class="d-flex justify-content-between align-items-center">
 
-<div class="col-md-8">
+<div>
 
 <h2>💬 Forum Diskusi</h2>
 
-<p>
-
+<p class="mb-0">
 Diskusikan materi bersama guru dan temanmu.
-
 </p>
 
 </div>
 
-<div class="col-md-4 text-right">
+<div>
 
-<button class="btn btn-light rounded-pill px-4">
+@if(auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
+
+<a href="{{ route('forum.create') }}"
+class="btn btn-light rounded-pill px-4">
 
 <i class="fas fa-plus"></i>
 
 Buat Diskusi
 
-</button>
+</a>
+
+@endif
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mb-4">
+
+<div class="col-md-6">
+
+<div class="card stat-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-primary">
+
+{{ $forums->count() }}
+
+</h2>
+
+<h5>Total Diskusi</h5>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card stat-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-success">
+
+{{ $forums->sum(function($forum){ return $forum->comments->count(); }) }}
+
+</h2>
+
+<h5>Total Komentar</h5>
+
+</div>
 
 </div>
 
@@ -116,18 +162,22 @@ Buat Diskusi
 
 <div class="search-box">
 
-<form>
+<form action="{{ route('forum.index') }}" method="GET">
 
 <div class="input-group">
 
 <input
 type="text"
+name="search"
+value="{{ request('search') }}"
 class="form-control"
-placeholder="Cari topik diskusi...">
+placeholder="Cari judul diskusi...">
 
 <div class="input-group-append">
 
 <button class="btn btn-primary rounded-pill px-4">
+
+<i class="fas fa-search"></i>
 
 Cari
 
@@ -141,151 +191,175 @@ Cari
 
 </div>
 
-@php
-
-$forums=[
-
-[
-'nama'=>'Andi',
-'judul'=>'Bagaimana cara membuat migration Laravel?',
-'isi'=>'Saya masih bingung menggunakan migration di Laravel. Mohon penjelasannya.',
-'kategori'=>'Laravel',
-'waktu'=>'5 menit lalu',
-'like'=>12,
-'komen'=>8
-],
-
-[
-'nama'=>'Sinta',
-'judul'=>'Apa itu Normalisasi Database?',
-'isi'=>'Ada yang bisa menjelaskan Normalisasi sampai 3NF?',
-'kategori'=>'Database',
-'waktu'=>'30 menit lalu',
-'like'=>20,
-'komen'=>15
-],
-
-[
-'nama'=>'Budi',
-'judul'=>'Perbedaan Stack dan Queue',
-'isi'=>'Saya masih bingung perbedaan Stack dan Queue.',
-'kategori'=>'Struktur Data',
-'waktu'=>'1 jam lalu',
-'like'=>16,
-'komen'=>9
-]
-
-];
-
-@endphp
-
 @foreach($forums as $forum)
 
-<div class="card forum-card shadow mb-4">
+<div class="card forum-card mb-4">
 
-<div class="card-body">
+    <div class="card-body">
 
-<div class="d-flex">
+        <div class="d-flex">
 
-<div class="avatar">
+            <div class="avatar">
 
-{{ substr($forum['nama'],0,1) }}
+                {{ strtoupper(substr($forum->author ?? 'U',0,1)) }}
 
-</div>
+            </div>
 
-<div class="ml-3 flex-grow-1">
+            <div class="ml-3 flex-grow-1">
 
-<div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between">
 
-<div>
+                    <div>
 
-<h4 class="font-weight-bold">
+                        <h4 class="font-weight-bold">
 
-{{ $forum['judul'] }}
+                            {{ $forum->title }}
 
-</h4>
+                        </h4>
 
-<small class="text-muted">
+                        <small class="text-muted">
 
-<i class="fas fa-user"></i>
+                            <i class="fas fa-user"></i>
 
-{{ $forum['nama'] }}
+                            {{ $forum->author }}
 
-•
+                            &nbsp;&nbsp;
 
-<i class="fas fa-clock"></i>
+                            <i class="fas fa-clock"></i>
 
-{{ $forum['waktu'] }}
+                            {{ $forum->created_at->diffForHumans() }}
 
-</small>
+                        </small>
 
-</div>
+                    </div>
 
-<span class="badge-category">
+                    <span class="badge badge-primary rounded-pill px-3 py-2">
 
-{{ $forum['kategori'] }}
+                        Forum
 
-</span>
+                    </span>
 
-</div>
+                </div>
 
-<p class="mt-3 text-muted">
+                <hr>
 
-{{ $forum['isi'] }}
+                <p class="text-muted">
 
-</p>
+                    {{ Str::limit($forum->content, 250) }}
 
-<hr>
+                </p>
 
-<div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
 
-<div>
+                    <div>
 
-<span class="mr-4">
+                        <span class="text-secondary">
 
-❤️ {{ $forum['like'] }}
+                            <i class="fas fa-comments"></i>
 
-</span>
+                            {{ $forum->comments->count() }} Komentar
 
-<span>
+                        </span>
 
-💬 {{ $forum['komen'] }}
+                    </div>
 
-</span>
+                    <div>
 
-</div>
+                        <a href="{{ route('forum.show',$forum->id) }}"
+                           class="btn btn-primary rounded-pill">
 
-<div>
+                            <i class="fas fa-comments"></i>
 
-<button class="btn btn-outline-primary action-btn">
+                            Diskusi
 
-<i class="fas fa-thumbs-up"></i>
+                        </a>
 
-Like
+                        @if(auth()->user()->role == 'admin' || auth()->id() == $forum->user_id)
 
-</button>
+                            <a href="{{ route('forum.edit',$forum->id) }}"
+                               class="btn btn-warning rounded-pill">
 
-<button class="btn btn-primary action-btn">
+                                <i class="fas fa-edit"></i>
 
-<i class="fas fa-comments"></i>
+                                Edit
 
-Balas
+                            </a>
 
-</button>
+                            <form
+                                action="{{ route('forum.destroy',$forum->id) }}"
+                                method="POST"
+                                class="d-inline">
 
-</div>
+                                @csrf
+                                @method('DELETE')
 
-</div>
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger rounded-pill"
+                                    onclick="return confirm('Yakin ingin menghapus diskusi ini?')">
 
-</div>
+                                    <i class="fas fa-trash"></i>
 
-</div>
+                                    Hapus
 
-</div>
+                                </button>
+
+                            </form>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
 @endforeach
+
+@if($forums->isEmpty())
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body text-center py-5">
+
+        <i class="fas fa-comments fa-5x text-secondary mb-4"></i>
+
+        <h3 class="font-weight-bold text-secondary">
+
+            Belum Ada Diskusi
+
+        </h3>
+
+        <p class="text-muted mb-4">
+
+            Belum ada topik diskusi yang dibuat.
+
+        </p>
+
+        @if(auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
+
+            <a href="{{ route('forum.create') }}"
+               class="btn btn-primary rounded-pill px-4">
+
+                <i class="fas fa-plus"></i>
+
+                Buat Diskusi Pertama
+
+            </a>
+
+        @endif
+
+    </div>
+
+</div>
+
+@endif
 
 </div>
 

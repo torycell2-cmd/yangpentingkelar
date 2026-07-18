@@ -1,89 +1,94 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title','Edit Diskusi')
 
 @section('content')
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    {{-- Tombol Kembali --}}
-    <div class="mb-3">
-        <a href="{{ route('forum.index') }}" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left me-1" aria-hidden="true"></i>
-            Kembali ke Forum
-        </a>
-    </div>
+    <div class="card shadow">
 
-    <div class="card shadow border-0">
-
-        <div class="card-header bg-warning text-dark">
+        <div class="card-header bg-warning text-white">
 
             <h4 class="mb-0">
-                <i class="fa fa-pencil-square-o me-2" aria-hidden="true"></i>
-                Edit Topik Diskusi
+
+                <i class="fas fa-edit"></i>
+
+                Edit Diskusi
+
             </h4>
 
         </div>
 
         <div class="card-body">
 
-            <form action="{{ route('forum.update',$forum->id) }}"
-                  method="POST">
+            @if($errors->any())
+
+                <div class="alert alert-danger">
+
+                    <ul class="mb-0">
+
+                        @foreach($errors->all() as $error)
+
+                            <li>{{ $error }}</li>
+
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+            @endif
+
+            <form action="{{ route('forum.update',$forum->id) }}" method="POST">
 
                 @csrf
                 @method('PUT')
 
-                <div class="mb-3">
+                <div class="form-group">
 
-                    <label class="form-label fw-semibold">
-                        Judul Topik
-                    </label>
+                    <label>Judul Diskusi</label>
 
                     <input
                         type="text"
                         name="title"
                         class="form-control"
-                        value="{{ $forum->title }}">
+                        value="{{ old('title',$forum->title) }}"
+                        required>
 
                 </div>
 
-                <div class="mb-3">
+                <div class="form-group">
 
-                    <label class="form-label fw-semibold">
-                        <i class="fa fa-user-o me-1" aria-hidden="true"></i>
-                        Nama Author
-                    </label>
-
-                    <input
-                        type="text"
-                        name="author"
-                        class="form-control"
-                        value="{{ $forum->author }}">
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label class="form-label fw-semibold">
-                        <i class="fa fa-commenting me-1" aria-hidden="true"></i>
-                        Isi Diskusi
-                    </label>
+                    <label>Isi Diskusi</label>
 
                     <textarea
                         name="content"
-                        rows="6"
-                        class="form-control">{{ $forum->content }}</textarea>
+                        rows="8"
+                        class="form-control"
+                        required>{{ old('content',$forum->content) }}</textarea>
 
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="text-right">
 
                     <a href="{{ route('forum.index') }}"
-                       class="btn btn-outline-secondary me-2">
-                        Batal
+                       class="btn btn-secondary">
+
+                        <i class="fas fa-arrow-left"></i>
+
+                        Kembali
+
                     </a>
 
-                    <button class="btn btn-warning">
-                        <i class="fa fa-save me-1" aria-hidden="true"></i>
-                        Simpan Perubahan
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        <i class="fas fa-save"></i>
+
+                        Simpan
+
                     </button>
 
                 </div>
