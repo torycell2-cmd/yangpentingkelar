@@ -286,10 +286,10 @@
                         Selamat datang kembali. Kelola artikel, quiz, dan forum pembelajaran dengan lebih menyenangkan hari ini.
                     </p>
                     <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
-                        <a href="#" class="btn btn-light px-4 py-2 fw-semibold rounded-pill text-primary shadow-sm">
+                        <a href="{{ route('articles.create') }}" class="btn btn-light px-4 py-2 fw-semibold rounded-pill text-primary shadow-sm">
                             <i class="fas fa-plus-circle me-2"></i>Buat Artikel
                         </a>
-                        <a href="#" class="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">
+                        <a href="{{ route('quiz.create') }}" class="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">
                             <i class="fas fa-file-signature me-2"></i>Buat Quiz
                         </a>
                     </div>

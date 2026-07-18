@@ -12,12 +12,16 @@ class ArticleController extends Controller
         $keyword = $request->input('query');
         
         $articles = Article::where('status', 'approved')
-            ->when($keyword, function($query) use ($keyword) {
-                return $query->where('title', 'LIKE', "%{$keyword}%")
-                             ->orWhere('content', 'LIKE', "%{$keyword}%");
-            })
-            ->latest()
-            ->get();
+        ->when($keyword, function ($query) use ($keyword) {
+            return $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'LIKE', "%{$keyword}%")
+                ->orWhere('content', 'LIKE', "%{$keyword}%")
+                ->orWhere('category', 'LIKE', "%{$keyword}%")
+                ->orWhere('author', 'LIKE', "%{$keyword}%");
+            });
+        })
+        ->latest()
+        ->get();
 
         $trendingArticles = Article::where('status', 'approved')
             ->orderBy('views', 'desc')
@@ -27,8 +31,25 @@ class ArticleController extends Controller
         return view('articles.index', compact('articles', 'trendingArticles', 'keyword'));
     }
 
+    public function pending()
+    {
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+
+        if (strtolower(auth()->user()->role) != 'admin') {
+            abort(403);
+        }
+
+        $articles = Article::where('status', 'pending')
+                    ->latest()
+                    ->get();
+
+        return view('admin.articles.pending', compact('articles'));
+    }
+
     public function create()
-{
+    {
     // Cek login manual
     if (!auth()->check()) {
         // Tulis session manual
@@ -49,7 +70,17 @@ class ArticleController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect('/login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
         $role = strtolower(auth()->user()->role);
+        $request->validate([
+            'title' => 'required|max:255',
+            'author' => 'required|max:100',
+            'category' => 'required|max:100',
+            'content' => 'required',
+        ]);
 
         if ($role !== 'admin' && $role !== 'guru') {
             return redirect()->route('articles.index')->with('error', 'Anda tidak memiliki akses untuk membuat artikel.');
@@ -69,12 +100,16 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::findOrFail($id);
-        
-        if ($article->status !== 'approved' && strtolower(auth()->user()->role) !== 'admin') {
+
+        $role = auth()->check()
+            ? strtolower(auth()->user()->role)
+            : 'guest';
+
+        if ($article->status !== 'approved' && $role !== 'admin') {
             abort(403);
         }
 
-        if (strtolower(auth()->user()->role) === 'siswa') {
+        if ($role === 'siswa') {
             $article->increment('views');
         }
 
@@ -83,14 +118,34 @@ class ArticleController extends Controller
 
     public function destroy($id)
     {
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+        $role = strtolower(auth()->user()->role);
+
+        if ($role != 'admin' && $role != 'guru') {
+            abort(403);
+        }
+
         $article = Article::findOrFail($id);
         $article->delete();
 
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')
+                        ->with('success', 'Artikel berhasil dihapus.');
     }
 
     public function edit($id)
     {
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+
+        $role = strtolower(auth()->user()->role);
+
+        if ($role != 'admin' && $role != 'guru') {
+            abort(403);
+        }
+
         $article = Article::findOrFail($id);
 
         return view('articles.edit', compact('article'));
@@ -98,7 +153,22 @@ class ArticleController extends Controller
 
     public function update(Request $request, $id)
     {
+         if (!auth()->check()) {
+            return redirect('/login');
+        }
+
+        $role = strtolower(auth()->user()->role);
+
+        if ($role != 'admin' && $role != 'guru') {
+            abort(403);
+            }
         $article = Article::findOrFail($id);
+        $request->validate([
+            'title' => 'required|max:255',
+            'author' => 'required|max:100',
+            'category' => 'required|max:100',
+            'content' => 'required',
+        ]);
 
         $article->update([
             'title' => $request->title,
@@ -112,9 +182,22 @@ class ArticleController extends Controller
 
     public function approve($id)
     {
-        $article = Article::findOrFail($id);
-        $article->update(['status' => 'approved']);
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
 
-        return redirect()->back()->with('success', 'Artikel berhasil di-ACC!');
+        $role = strtolower(auth()->user()->role);
+
+        if ($role != 'admin') {
+            abort(403);
+        }
+
+        $article = Article::findOrFail($id);
+
+        $article->update([
+            'status' => 'approved'
+        ]);
+
+        return back()->with('success', 'Artikel berhasil di-ACC!');
     }
 }
