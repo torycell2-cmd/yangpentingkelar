@@ -1,35 +1,207 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title', 'Forum Diskusi')
 
 @section('content')
 
-<div class="container">
+<style>
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">💬 Forum Diskusi</h2>
-            <p class="text-muted mb-0">
-                Tempat berdiskusi, bertanya, dan berbagi pengetahuan.
-            </p>
-        </div>
+body{
+    background:#f4f7fb;
+}
 
-        <a href="{{ route('forum.create') }}" class="btn btn-primary px-4">
-            <i class="bi bi-plus-circle"></i> Buat Topik
-        </a>
-    </div>
+.hero{
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    border-radius:20px;
+    padding:40px;
+    margin-bottom:25px;
+}
 
-    {{-- Statistik --}}
-    <div class="row g-3 mb-4">
+.hero h2{
+    font-weight:bold;
+}
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Topik</small>
-                        <h2 class="fw-bold text-primary mb-0">
-                            {{ $totalForum }}
-                        </h2>
-                    </div>
+.stat-card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+}
+
+.search-box{
+    background:white;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.search-box input{
+    border-radius:30px;
+}
+
+.forum-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.forum-card:hover{
+    transform:translateY(-5px);
+}
+
+.avatar{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#2563eb;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.badge-category{
+    background:#2563eb;
+    color:white;
+    border-radius:30px;
+    padding:7px 18px;
+}
+
+</style>
+
+<div class="container-fluid py-4">
+
+<div class="hero">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div>
+
+<h2>💬 Forum Diskusi</h2>
+
+<p class="mb-0">
+Diskusikan materi bersama guru dan temanmu.
+</p>
+
+</div>
+
+<div>
+
+@if(auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
+
+<a href="{{ route('forum.create') }}"
+class="btn btn-light rounded-pill px-4">
+
+<i class="fas fa-plus"></i>
+
+Buat Diskusi
+
+</a>
+
+@endif
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mb-4">
+
+<div class="col-md-6">
+
+<div class="card stat-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-primary">
+
+{{ $forums->count() }}
+
+</h2>
+
+<h5>Total Diskusi</h5>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card stat-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-success">
+
+{{ $forums->sum(function($forum){ return $forum->comments->count(); }) }}
+
+</h2>
+
+<h5>Total Komentar</h5>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="search-box">
+
+<form action="{{ route('forum.index') }}" method="GET">
+
+<div class="input-group">
+
+<input
+type="text"
+name="search"
+value="{{ request('search') }}"
+class="form-control"
+placeholder="Cari judul diskusi...">
+
+<div class="input-group-append">
+
+<button class="btn btn-primary rounded-pill px-4">
+
+<i class="fas fa-search"></i>
+
+Cari
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+@foreach($forums as $forum)
+
+<div class="card forum-card mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex">
+
+            <div class="avatar">
+
+                {{ strtoupper(substr($forum->author ?? 'U',0,1)) }}
 
                     <div class="fs-1">
                         💬
@@ -239,52 +411,31 @@ Cari
                 {{ strtoupper(substr($forum->author ?? 'U',0,1)) }}
 
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Komentar</small>
-                        <h2 class="fw-bold text-success mb-0">
-                            {{ $totalComment }}
-                        </h2>
-                    </div>
-
-                    <div class="fs-1">
-                        📝
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- Daftar Forum --}}
-    <div class="card border-0 shadow-sm">
-
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-semibold">
-                Daftar Topik Diskusi
-            </h5>
-        </div>
-
-        <div class="card-body p-0">
-
-            @forelse($forums as $forum)
-
-            <div class="border-bottom p-4">
+            <div class="ml-3 flex-grow-1">
 
                 <div class="d-flex justify-content-between">
 
                     <div>
 
-                        <h5 class="fw-bold mb-1">
+                        <h4 class="font-weight-bold">
+
                             {{ $forum->title }}
-                        </h5>
+
+                        </h4>
 
                         <small class="text-muted">
-                            👤 {{ $forum->author }}
+
+                            <i class="fas fa-user"></i>
+
+                            {{ $forum->author }}
+
+                            &nbsp;&nbsp;
+
+                            <i class="fas fa-clock"></i>
+
+                            {{ $forum->created_at->diffForHumans() }}
+
                         </small>
 
                         <div class="mt-3">
@@ -339,20 +490,64 @@ Cari
                                 <i class="fas fa-pen"></i>
 
                                 Edit
+                    </div>
 
-                            <a href="{{ route('forum.show',$forum->id) }}"
-                               class="btn btn-outline-primary btn-sm">
-                                Detail
-                            </a>
+                    <span class="badge badge-primary rounded-pill px-3 py-2">
+
+                        Forum
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <p class="text-muted">
+
+                    {{ Str::limit($forum->content, 250) }}
+
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <span class="text-secondary">
+
+                            <i class="fas fa-comments"></i>
+
+                            {{ $forum->comments->count() }} Komentar
+
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <a href="{{ route('forum.show',$forum->id) }}"
+                           class="btn btn-primary rounded-pill">
+
+                            <i class="fas fa-comments"></i>
+
+                            Diskusi
+
+                        </a>
+
+                        @if(auth()->user()->role == 'admin' || auth()->id() == $forum->user_id)
 
                             <a href="{{ route('forum.edit',$forum->id) }}"
-                               class="btn btn-outline-warning btn-sm">
+                               class="btn btn-warning rounded-pill">
+
+                                <i class="fas fa-edit"></i>
+
                                 Edit
+
                             </a>
 
-                            <form action="{{ route('forum.destroy',$forum->id) }}"
-                                  method="POST"
-                                  class="d-inline">
+                            <form
+                                action="{{ route('forum.destroy',$forum->id) }}"
+                                method="POST"
+                                class="d-inline">
 
                                 @csrf
                                 @method('DELETE')
@@ -365,52 +560,21 @@ Cari
                                     onclick="return confirm('Yakin ingin menghapus diskusi ini?')">
 
                                     <i class="fas fa-trash-alt"></i>
+                                    <i class="fas fa-trash"></i>
 
                                     Hapus
+
                                 </button>
 
                             </form>
 
-                        </div>
-
-                    </div>
-
-                    <div class="text-end text-muted">
-
-                        <div class="badge bg-light text-dark mb-2">
-                            ID #{{ $forum->id }}
-                        </div>
+                        @endif
 
                     </div>
 
                 </div>
 
             </div>
-
-            @empty
-
-            <div class="text-center py-5">
-
-                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
-                     width="120"
-                     class="mb-3">
-
-                <h5 class="fw-bold">
-                    Belum Ada Diskusi
-                </h5>
-
-                <p class="text-muted">
-                    Jadilah orang pertama yang membuat topik diskusi.
-                </p>
-
-                <a href="{{ route('forum.create') }}"
-                   class="btn btn-primary">
-                    + Buat Topik
-                </a>
-
-            </div>
-
-            @endforelse
 
         </div>
 
@@ -427,6 +591,7 @@ Cari
     <div class="card-body text-center py-5">
 
         <i class="fas fa-comment-slash fa-5x text-secondary mb-4"></i>
+        <i class="fas fa-comments fa-5x text-secondary mb-4"></i>
 
         <h3 class="font-weight-bold text-secondary">
 
@@ -446,6 +611,7 @@ Cari
                class="btn btn-primary rounded-pill px-4">
 
                 <i class="fas fa-plus-circle"></i>
+                <i class="fas fa-plus"></i>
 
                 Buat Diskusi Pertama
 
@@ -461,5 +627,4 @@ Cari
 
 </div>
 
->>>>>>> Stashed changes
 @endsection

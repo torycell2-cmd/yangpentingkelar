@@ -1,15 +1,17 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title', 'Detail Forum')
 
 @section('content')
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    {{-- Tombol Kembali --}}
     <div class="mb-3">
         <a href="{{ route('forum.index') }}" class="btn btn-outline-secondary">
             <i class="fa fa-arrow-left me-1" aria-hidden="true"></i>
             Kembali ke Forum
         <a href="{{ route('forum.index') }}" class="btn btn-secondary rounded-pill px-4">
+        <a href="{{ route('forum.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali ke Forum
         </a>
     </div>
@@ -23,6 +25,11 @@
             <h3 class="mb-0 font-weight-bold">
 
                 <i class="fas fa-comments mr-2"></i>
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
 
                 {{ $forum->title }}
 
@@ -32,17 +39,13 @@
 
         <div class="card-body">
 
-            <h2 class="fw-bold mb-3">
-                {{ $forum->title }}
-            </h2>
+            <div class="mb-3 text-muted">
 
             <div class="d-flex align-items-center text-muted mb-3">
                 <i class="fas fa-user-circle text-primary"></i>
+                <i class="fas fa-user"></i>
 
-                <span class="me-4">
-                    <i class="fa fa-user-o me-1" aria-hidden="true"></i>
-                    {{ $forum->author }}
-                </span>
+                {{ $forum->author }}
 
                 <span>
                     <i class="fa fa-commenting me-1" aria-hidden="true"></i>
@@ -51,12 +54,16 @@
                 &nbsp;&nbsp;
 
                 <i class="fas fa-calendar-alt text-success"></i>
+                &nbsp;&nbsp;
+
+                <i class="fas fa-calendar"></i>
 
                 {{ $forum->created_at->format('d M Y H:i') }}
 
                 &nbsp;&nbsp;
 
                 <i class="fas fa-comment-dots text-warning"></i>
+                <i class="fas fa-comments"></i>
 
                 {{ $forum->comments->count() }} Komentar
 
@@ -66,8 +73,10 @@
 
             <p class="fs-6" style="line-height: 1.8;">
             <p class="text-secondary" style="white-space: pre-line; font-size:16px; line-height:1.8;">
+            <p style="white-space: pre-line">
 
                 {{ $forum->content }}
+
             </p>
 
         </div>
@@ -75,9 +84,9 @@
     </div>
 
     {{-- Komentar --}}
-    <div class="card shadow border-0 mb-4">
+    <div class="card shadow mt-4">
 
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-success text-white">
 
             <h5 class="mb-0">
                 <i class="fa fa-commenting me-2" aria-hidden="true"></i>
@@ -89,6 +98,8 @@
             <h5 class="mb-0">
 
                 <i class="fas fa-comment-dots"></i>
+
+                <i class="fas fa-comments"></i>
 
                 Komentar
 
@@ -102,52 +113,31 @@
 
                 <div class="card mb-3 border-0 shadow-sm">
                 <div class="border rounded-4 p-3 mb-3 shadow-sm">
+                <div class="border rounded p-3 mb-3">
 
-                    <div class="card-body">
+                    <div class="d-flex justify-content-between">
 
-                        <div class="d-flex justify-content-between">
+                        <div>
 
                             <div>
                             <strong class="text-primary">
+                            <strong>
 
-                                <h6 class="mb-1 fw-bold">
-                                    <i class="fa fa-user-o me-1" aria-hidden="true"></i>
-                                    {{ $comment->author }}
-                                </h6>
+                                {{ $comment->author }}
 
-                                <small class="text-muted">
-                                    {{ $comment->created_at->format('d M Y H:i') }}
-                                </small>
+                            </strong>
 
-                            </div>
+                            <br>
 
-                            <div>
+                            <small class="text-muted">
 
-                                <a href="{{ route('comment.edit',$comment->id) }}"
-                                   class="btn btn-warning btn-sm">
-                                    Edit
-                                </a>
+                                {{ $comment->created_at->format('d M Y H:i') }}
 
-                                <form action="{{ route('comment.destroy',$comment->id) }}"
-                                      method="POST"
-                                      class="d-inline">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin hapus komentar?')">
-                                        Hapus
-                                    </button>
-
-                                </form>
-
-                            </div>
+                            </small>
 
                         </div>
 
-                        <hr>
+                        @if(auth()->user()->role == 'admin' || auth()->id() == $comment->user_id)
 
                         <p class="mb-0">
                             {{ $comment->comment }}
@@ -158,6 +148,7 @@
                                class="btn btn-warning btn-sm">
 
                                 <i class="fas fa-pen"></i>
+                                <i class="fas fa-edit"></i>
 
                                 Edit
 
@@ -177,6 +168,7 @@
                                     onclick="return confirm('Yakin ingin menghapus komentar?')">
 
                                     <i class="fas fa-trash-alt"></i>
+                                    <i class="fas fa-trash"></i>
 
                                     Hapus
 
@@ -190,6 +182,14 @@
 
                     </div>
 
+                    <hr>
+
+                    <p class="mb-0">
+
+                        {{ $comment->comment }}
+
+                    </p>
+
                 </div>
 
             @empty
@@ -198,16 +198,19 @@
 
                     <i class="fa fa-commenting fa-3x text-secondary mb-3" aria-hidden="true"></i>
                     <i class="fas fa-comment-slash fa-4x text-secondary mb-3"></i>
+                    <i class="fas fa-comments fa-4x text-secondary mb-3"></i>
 
                     <h5>
 
-                    <h5 class="text-muted">
                         Belum ada komentar
+
                     </h5>
 
-                    <small class="text-secondary">
+                    <p class="text-muted">
+
                         Jadilah yang pertama memberikan komentar.
-                    </small>
+
+                    </p>
 
                 </div>
 
@@ -218,9 +221,9 @@
     </div>
 
     {{-- Form Komentar --}}
-    <div class="card shadow border-0">
+    <div class="card shadow mt-4">
 
-        <div class="card-header bg-success text-white">
+        <div class="card-header bg-info text-white">
 
             <h5 class="mb-0">
                 <i class="fa fa-commenting me-2" aria-hidden="true"></i>
@@ -232,33 +235,54 @@
 
                 <i class="fas fa-paper-plane mr-1"></i>
 
+                <i class="fas fa-paper-plane"></i>
+
                 Tambah Komentar
+
             </h5>
 
         </div>
 
         <div class="card-body">
 
-            <form action="{{ route('forum.comment',$forum->id) }}"
-                  method="POST">
+            @if($errors->any())
 
-                @csrf
+                <div class="alert alert-danger">
 
-                <div class="mb-3">
+                    <ul class="mb-0">
 
-                    <label class="form-label fw-semibold">
-                        <i class="fa fa-user-o me-1" aria-hidden="true"></i>
-                        Nama
-                    </label>
+                        @foreach($errors->all() as $error)
 
-                    <input type="text"
-                           name="author"
-                           class="form-control"
-                           placeholder="Masukkan nama">
+                            <li>{{ $error }}</li>
+
+                        @endforeach
+
+                    </ul>
 
                 </div>
 
-                <div class="mb-3">
+            @endif
+
+            <form action="{{ route('forum.comment',$forum->id) }}" method="POST">
+
+                @csrf
+
+                <div class="form-group">
+
+                    <label>Komentar</label>
+
+                    <textarea
+                        name="comment"
+                        rows="5"
+                        class="form-control"
+                        placeholder="Tulis komentar..."
+                        required></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
 
                     <label class="form-label fw-semibold">
                         <i class="fa fa-commenting me-1" aria-hidden="true"></i>
@@ -278,17 +302,10 @@
                     class="btn btn-primary rounded-pill px-4">
 
                     <i class="fas fa-paper-plane mr-1"></i>
+                    <i class="fas fa-paper-plane"></i>
 
-                    <textarea name="comment"
-                              class="form-control"
-                              rows="5"
-                              placeholder="Tulis komentar..."></textarea>
-
-                </div>
-
-                <button class="btn btn-primary px-4">
-                    <i class="fa fa-paper-plane me-1" aria-hidden="true"></i>
                     Kirim Komentar
+
                 </button>
 
             </form>

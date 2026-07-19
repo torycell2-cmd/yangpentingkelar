@@ -1,37 +1,59 @@
-@extends('layouts.layouts')
+@extends('adminlte::page')
+
+@section('title', 'Buat Topik Diskusi')
 
 @section('content')
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    {{-- Tombol Kembali --}}
     <div class="mb-3">
-        <a href="{{ route('forum.index') }}" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left me-1" aria-hidden="true"></i>
+        <a href="{{ route('forum.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
             Kembali ke Forum
         </a>
     </div>
 
-    <div class="card shadow border-0">
+    <div class="card shadow">
 
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary">
 
-            <h4 class="mb-0">
-                <i class="fa fa-commenting me-2" aria-hidden="true"></i>
+            <h4 class="mb-0 text-white">
+
+                <i class="fas fa-comments"></i>
+
                 Buat Topik Diskusi
+
             </h4>
 
         </div>
 
         <div class="card-body">
 
+            @if($errors->any())
+
+                <div class="alert alert-danger">
+
+                    <ul class="mb-0">
+
+                        @foreach($errors->all() as $error)
+
+                            <li>{{ $error }}</li>
+
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+            @endif
+
             <form action="{{ route('forum.store') }}" method="POST">
 
                 @csrf
 
-                <div class="mb-3">
+                <div class="form-group">
 
-                    <label class="form-label fw-semibold">
+                    <label>
                         Judul Topik
                     </label>
 
@@ -39,50 +61,46 @@
                         type="text"
                         name="title"
                         class="form-control"
-                        placeholder="Masukkan judul topik diskusi">
+                        placeholder="Masukkan judul topik diskusi"
+                        value="{{ old('title') }}"
+                        required>
 
                 </div>
 
-                <div class="mb-3">
+                <div class="form-group">
 
-                    <label class="form-label fw-semibold">
-                        <i class="fa fa-user-o me-1" aria-hidden="true"></i>
-                        Nama Author
-                    </label>
-
-                    <input
-                        type="text"
-                        name="author"
-                        class="form-control"
-                        placeholder="Masukkan nama">
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label class="form-label fw-semibold">
-                        <i class="fa fa-commenting me-1" aria-hidden="true"></i>
+                    <label>
                         Isi Diskusi
                     </label>
 
                     <textarea
                         name="content"
-                        rows="6"
+                        rows="8"
                         class="form-control"
-                        placeholder="Tuliskan isi diskusi di sini..."></textarea>
+                        placeholder="Tuliskan isi diskusi di sini..."
+                        required>{{ old('content') }}</textarea>
 
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="text-right">
 
                     <a href="{{ route('forum.index') }}"
-                       class="btn btn-outline-secondary me-2">
+                       class="btn btn-secondary">
+
+                        <i class="fas fa-times"></i>
+
                         Batal
+
                     </a>
 
-                    <button class="btn btn-success">
-                        <i class="fa fa-paper-plane me-1" aria-hidden="true"></i>
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        <i class="fas fa-paper-plane"></i>
+
                         Simpan Topik
+
                     </button>
 
                 </div>

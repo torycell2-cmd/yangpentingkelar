@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,10 +29,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    protected $filltable = [
+    protected $fillable = [
         'name' ,
         'email' ,
         'password',
         'role'
     ];
+    // Relasi untuk mendapatkan daftar teman
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id');
+    }
 }

@@ -10,6 +10,8 @@ class Article extends Model
         'title',
         'author',
         'category',
-        'content'
+        'content',
+        'status',
+        'views',
     ];
 }
