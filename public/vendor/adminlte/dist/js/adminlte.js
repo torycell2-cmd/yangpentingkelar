@@ -122,7 +122,7 @@
 
       $__default["default"](this).find(this._settings.trigger).on('click', function () {
         _this2.load();
-      });
+      });``
 
       if (this._settings.loadOnInit) {
         this.load();
