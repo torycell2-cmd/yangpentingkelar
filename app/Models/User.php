@@ -33,7 +33,7 @@ class User extends Authenticatable
         'name' ,
         'email' ,
         'password',
-        'role'
+        'role',
     ];
     // Relasi untuk mendapatkan daftar teman
     // Tambahkan dua relasi ini di dalam class User

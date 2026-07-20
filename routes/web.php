@@ -176,6 +176,8 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/articles/{id}/approve',
             [ArticleController::class, 'approve'])
             ->name('admin.articles.approve');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+       
 
     });
 
@@ -189,6 +191,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/guru/input-nilai',
             [GuruController::class, 'create']);
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
 
     });
 
@@ -207,6 +211,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', function () {
         return "Halaman Profil Belum Dibuat. Nanti diganti dengan view ya min!";
     });
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    
     
     /*
     |--------------------------------------------------------------------------
@@ -214,7 +220,7 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::match(['post', 'put'], '/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     /*
     |--------------------------------------------------------------------------
     | add friend
