@@ -38,7 +38,8 @@ fitur add friend
 */
 Route::get('/friends', [FriendController::class, 'index'])->name('friends.index');
 Route::delete('/friend/unfriend/{id}', [FriendController::class, 'unfriend'])->name('friend.unfriend');
-
+Route::post('/friend/accept/{id}', [App\Http\Controllers\FriendController::class, 'acceptFriend'])->name('friend.accept');
+Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
 Route::post('/forum/{id}/comment', [ForumController::class, 'storeComment'])
     ->name('forum.comment');
 
@@ -50,6 +51,7 @@ Route::put('/comment/{id}', [ForumController::class, 'updateComment'])
 
 Route::delete('/comment/{id}', [ForumController::class, 'destroyComment'])
     ->name('comment.destroy');
+
 
 /*
 |--------------------------------------------------------------------------

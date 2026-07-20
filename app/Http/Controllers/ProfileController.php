@@ -43,4 +43,19 @@ class ProfileController extends Controller
         // 3. Kembalikan ke halaman profil dengan pesan sukses
         return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
     }
+    public function show($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $currentUser = auth()->user();
+
+        // Cek apakah sudah berteman (accepted) - dari dua sisi
+        $isFriend = $currentUser->friends()->where('friend_id', $id)->where('status', 'accepted')->exists() 
+                 || $currentUser->friendRequests()->where('user_id', $id)->where('status', 'accepted')->exists();
+
+    // Cek apakah sedang pending - dari dua sisi
+        $isPending = $currentUser->friends()->where('friend_id', $id)->where('status', 'pending')->exists()
+                  || $currentUser->friendRequests()->where('user_id', $id)->where('status', 'pending')->exists();
+
+        return view('profile.show', compact('user', 'isFriend', 'isPending'));
+    }
 }

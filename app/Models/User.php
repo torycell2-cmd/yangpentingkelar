@@ -36,8 +36,20 @@ class User extends Authenticatable
         'role'
     ];
     // Relasi untuk mendapatkan daftar teman
+    // Tambahkan dua relasi ini di dalam class User
     public function friends()
     {
-        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id');
+        // Relasi untuk teman yang kita tambah
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function friendRequests()
+    {
+        // Relasi untuk request yang masuk ke kita
+        return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 }
