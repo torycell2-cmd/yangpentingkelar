@@ -16,32 +16,53 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // 1. Validasi file yang diupload (harus gambar, max 2MB)
-        $request->validate([
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
 
-        $user = Auth::user();
-
-        // 2. Cek apakah ada file foto yang diupload
+        // 1. JIKA USER MENGINPUT FOTO
         if ($request->hasFile('foto')) {
-            
-            // Hapus foto profil lama jika ada di storage (biar gak numpuk)
+            $request->validate([
+                'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            ]);
+
+            // Hapus foto lama jika ada
             if ($user->foto && Storage::disk('public')->exists($user->foto)) {
                 Storage::disk('public')->delete($user->foto);
             }
 
-            // Simpan foto baru ke folder 'profile_photos' di dalam storage/app/public
-            $file = $request->file('foto');
-            $path = $file->store('profile_photos', 'public');
-            
-            // Simpan path foto ke dalam kolom 'foto' di database
+            $path = $request->file('foto')->store('profile-photos', 'public');
             $user->foto = $path;
             $user->save();
+
+            return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
         }
 
-        // 3. Kembalikan ke halaman profil dengan pesan sukses
-        return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
+        // 2. JIKA USER MENGUBAH PASSWORD
+        if ($request->filled('password')) {
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password'         => ['required', 'confirmed', 'min:8'],
+            ]);
+
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->back()->with('success', 'Password berhasil diperbarui!');
+        }
+
+        // 3. JIKA USER MENGUBAH DATA PROFIL (NAMA, EMAIL, PHONE)
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $user->name  = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Data profil berhasil diperbarui!');
     }
     public function show($id)
     {
@@ -58,4 +79,6 @@ class ProfileController extends Controller
 
         return view('profile.show', compact('user', 'isFriend', 'isPending'));
     }
+
+  
 }
