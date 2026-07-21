@@ -9,7 +9,8 @@ class Comment extends Model
     protected $fillable = [
         'forum_id',
         'author',
-        'comment'
+        'comment',
+        'user_id'
     ];
 
     public function forum()

@@ -197,7 +197,7 @@
                     </div>
                     <div>
                         <div class="progress mb-2">
-                            <div class="progress-bar bg-info" style="width: 5%"></div>
+                            <div class="progress-bar bg-info" style="width: {{ $totalForum ?? 0 }}%"></div>
                         </div>
                         <span class="text-muted small">Aktif bertanya dan berdiskusi</span>
                     </div>
@@ -220,7 +220,7 @@
                     </div>
                     <div>
                         <div class="progress mb-2">
-                            <div class="progress-bar bg-success" style="width: 0%"></div>
+                            <div class="progress-bar bg-success" style="width: {{ min((($totalQuiz ?? 0) / 10) * 100, 100) }}%"></div>
                         </div>
                         <span class="text-muted small">Selesaikan latihan mingguan</span>
                     </div>
@@ -235,7 +235,7 @@
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <span class="text-secondary small fw-medium text-uppercase tracking-wider d-block mb-1">Nilai Rata-rata</span>
-                            <h2 class="fw-bold m-0" style="color: #2563eb;">85</h2>
+                            <h2 class="fw-bold m-0" style="color: #2563eb;">{{ $rataNilai ?? 0 }}</h2>
                         </div>
                         <div class="stat-icon bg-gradient shadow-sm" style="background: linear-gradient(135deg, #ff9900, #ff5500);">
                             <i class="fas fa-star"></i>
@@ -243,7 +243,7 @@
                     </div>
                     <div>
                         <div class="progress mb-2">
-                            <div class="progress-bar bg-warning" style="width: 85%"></div>
+                            <div class="progress-bar bg-warning" style="width: {{ $rataNilai ?? 0 }}%"></div>
                         </div>
                         <span class="text-success small fw-semibold d-inline-flex align-items-center">
                             <i class="fas fa-arrow-up me-1"></i>Sangat Bagus!
@@ -307,15 +307,13 @@
                         <i class="fas fa-chart-line text-success me-2"></i>Progress Belajar Bulan Ini
                     </h5>
                 </div>
-                <div class="card-body px-4 pb-4">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="small fw-semibold text-secondary">Kuis Terselesaikan</span>
-                            <span class="small fw-bold text-success">80%</span>
-                        </div>
-                        <div class="progress progress-lg">
-                            <div class="progress-bar bg-success" style="width:80%">80%</div>
-                        </div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="small fw-semibold text-secondary">Kuis Terselesaikan</span>
+                    <span class="small fw-bold text-success">{{ $totalQuiz ?? 0 }} Quiz</span>
+                </div>
+                <div class="progress progress-lg">
+                    <div class="progress-bar bg-success" style="width: {{ min((($totalQuiz ?? 0) / 10) * 100, 100) }}%">
+                        {{ min(round((($totalQuiz ?? 0) / 10) * 100), 100) }}%
                     </div>
                 </div>
             </div>
@@ -339,7 +337,7 @@
             </div>
         </div>
     </div>
-
+\
     <!-- Footer Space -->
     <div class="card border-0 shadow-sm rounded-4 mt-4">
         <div class="card-body p-4">
