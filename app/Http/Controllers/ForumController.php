@@ -33,13 +33,21 @@ class ForumController extends Controller
 
     public function store(Request $request)
     {
-        Forum::create([
-            'title' => $request->title,
-            'author' => $request->author,
-            'content' => $request->content,
+    // Validasi input dulu
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
         ]);
 
-        return redirect()->route('forum.index');
+    // Simpan ke database dengan menambahkan 'author'
+        \App\Models\Forum::create([
+            'title' => $request->title,
+            'content' => $request->content,
+        // Ini kuncinya: ambil ID user yang sedang login
+            'author' => auth()->user()->id, 
+        ]);
+
+        return redirect()->route('forum.index')->with('success', 'Forum berhasil dibuat!');
     }
 
     public function show($id)
@@ -58,14 +66,23 @@ class ForumController extends Controller
 
     public function storeComment(Request $request, $id)
     {
-        Comment::create([
-            'forum_id' => $id,
-            'author' => $request->author,
-            'comment' => $request->comment,
+    // Validasi
+        $request->validate([
+            'comment' => 'required',
         ]);
 
-        return back();
-    }
+    // Simpan komentar
+        // Simpan komentar
+        \App\Models\Comment::create([
+            'forum_id' => $id,            
+            'comment'  => $request->comment,
+            'author'   => auth()->user()->id, 
+            'user_id'  => auth()->user()->id, // <--- TAMBAHKAN INI
+
+        ]);
+
+        return back()->with('success', 'Komentar berhasil ditambahkan!');
+    }   
 
     public function editComment($id)
     {
