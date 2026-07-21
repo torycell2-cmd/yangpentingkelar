@@ -59,27 +59,7 @@ body{
     box-shadow:0 16px 30px rgba(0,0,0,.12);
 }
 
-.avatar{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
-    color:white;
-    box-shadow:0 8px 18px rgba(37,99,235,.25);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:24px;
-    font-weight:bold;
-}
 
-.badge-category{
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
-    color:white;
-    box-shadow:0 8px 18px rgba(37,99,235,.25);
-    border-radius:30px;
-    padding:7px 18px;
-}
 
 </style>
 
@@ -203,49 +183,29 @@ Cari
 
         <div class="d-flex">
 
-            <div class="avatar">
+            <div class="flex-grow-1">
 
-                {{ strtoupper(substr($forum->author ?? 'U',0,1)) }}
+                <h4 class="font-weight-bold mb-2">
 
-            </div>
+                    {{ $forum->title }}
 
-            <div class="ml-3 flex-grow-1">
+                </h4>
 
-                <div class="d-flex justify-content-between">
+                <small class="text-muted d-block mb-3">
 
-                    <div>
+                    <i class="fas fa-user mr-1"></i>
 
-                        <h4 class="font-weight-bold">
+                    {{ $forum->author }}
 
-                            {{ $forum->title }}
+                    <span class="mx-2">•</span>
 
-                        </h4>
+                    <i class="fas fa-clock mr-1"></i>
 
-                        <small class="text-muted">
+                    {{ $forum->created_at->diffForHumans() }}
 
-                            <i class="fas fa-user"></i>
+                </small>
 
-                            {{ $forum->author }}
-
-                            &nbsp;&nbsp;
-
-                            <i class="fas fa-clock"></i>
-
-                            {{ $forum->created_at->diffForHumans() }}
-
-                        </small>
-
-                    </div>
-
-                    <span class="badge badge-primary rounded-pill px-3 py-2">
-
-                        Forum
-
-                    </span>
-
-                </div>
-
-                <hr>
+                <hr class="my-4">
 
                 <p class="text-muted">
 
