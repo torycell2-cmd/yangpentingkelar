@@ -166,8 +166,21 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
 
-        Route::get('/admin/dashboard',
-            [AdminController::class, 'index']);
+        Route::get('/admin/dashboard', 
+        [AdminController::class, 'index'])
+        ->name('admin.dashboard');
+
+        // ==========================================
+        // ROUTE REALTIME STATS ADMIN
+        // ==========================================
+
+        Route::get('/admin/api/stats', 
+            [AdminController::class, 'getStats'])
+            ->name('admin.stats');
+
+        Route::patch('/admin/users/{id}/toggle-status', 
+            [AdminController::class, 'toggleStatus'])
+            ->name('admin.users.toggle-status');
 
         Route::get('/admin/articles/pending',
             [ArticleController::class, 'pending'])

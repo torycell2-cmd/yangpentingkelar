@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizResult;
 use App\Models\Article;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
@@ -22,9 +23,29 @@ class DashboardController extends Controller
                          ->inRandomOrder()
                          ->limit(5)
                          ->get();
+            
 
             if ($user->role == 'admin') {
-                return view('admin.dashboard');
+                // 1. Ambil 5 data guru terbaru
+                $recentGurus = User::where('role', 'guru')->latest()->take(5)->get();
+
+                // 2. AMBIL 5 DATA SISWA TERBARU (Tambahan agar muncul di tabel siswa)
+                $recentSiswas = User::where('role', 'siswa')->latest()->take(5)->get();
+
+                // 3. Buat data aktivitas dinamis berdasarkan user yang baru mendaftar
+                $recentActivities = User::latest()
+                    ->take(5)
+                    ->get()
+                    ->map(function ($u) {
+                        return [
+                            'type' => $u->role === 'guru' ? 'primary' : 'success',
+                            'title' => 'Pengguna Baru Terdaftar',
+                            'description' => "Akun {$u->role} baru atas nama {$u->name} telah terdaftar.",
+                            'time' => $u->created_at ? $u->created_at->diffForHumans() : '-'
+                        ];
+                    });
+
+                    return view('admin.dashboard', compact('recentGurus', 'recentSiswas', 'recentActivities'));
             }
 
             elseif ($user->role == 'guru') {
@@ -49,8 +70,14 @@ class DashboardController extends Controller
                     'rataNilai'    => round(QuizResult::where('user_id', $user->id)->avg('nilai') ?? 0),
                 ];
 
-                return view('siswa.dashboard', compact('users') + $counts);
-            }
+                $availableQuizzes = Quiz::latest()->take(5)->get();
+                $recentResults    = QuizResult::with('quiz')
+                            ->where('user_id', $user->id)
+                            ->latest()
+                            ->take(5)
+                            ->get();
+
+                return view('siswa.dashboard', compact('users', 'availableQuizzes', 'recentResults') + $counts);            }
         }
 
         // Fallback jika belum login / role tidak terdeteksi
